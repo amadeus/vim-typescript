@@ -1,4 +1,2 @@
-augroup typescript_syntax_detection
-  autocmd!
-  autocmd BufNewFile,BufRead *.{ts,tsx} setfiletype typescript
-augroup END
+au BufNewFile,BufRead *.tsx setfiletype typescript.tsx
+au BufNewFile,BufRead *.ts setfiletype typescript
