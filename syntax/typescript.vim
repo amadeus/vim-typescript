@@ -227,7 +227,7 @@ if exists('typescript_plugin_jsdoc')
 endif
 
 " Merge flow into this file...
-runtime extras/flow.vim
+runtime extras/ts.vim
 
 syntax cluster tsExpression  contains=tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
 syntax cluster tsAll         contains=@tsExpression,tsStorageClass,tsConditional,tsRepeat,tsReturn,tsException,tsTry,tsNoise,tsBlockLabel
