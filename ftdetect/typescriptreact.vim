@@ -1,1 +1,1 @@
-setlocal filetype=typescript.tsx
+au FileType typescriptreact setfiletype typescript.tsx
