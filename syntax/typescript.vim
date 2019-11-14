@@ -10,6 +10,10 @@ if !exists('main_syntax')
   let main_syntax = 'typescript'
 endif
 
+" NOTE: Not sure if I want to keep this... but I've noticed some issues
+" lately...
+syntax clear
+
 " Dollar sign is permitted anywhere in an identifier
 if (v:version > 704 || v:version == 704 && has('patch1142')) && main_syntax ==# 'typescript'
   syntax iskeyword @,48-57,_,192-255,$
@@ -218,166 +222,253 @@ syntax region  tsCommentRepeat      contained start=+/\*+ end=+\*/+ contains=tsC
 syntax match   tsDecorator                    /^\s*@/ nextgroup=tsDecoratorFunction
 syntax match   tsDecoratorFunction  contained /\h[a-zA-Z0-9_.]*/ nextgroup=tsParenDecorator
 
-if exists('typescript_plugin_jsdoc')
-  runtime extras/jsdoc.vim
-  " NGDoc requires JSDoc
-  if exists('typescript_plugin_ngdoc')
-    runtime extras/ngdoc.vim
-  endif
-endif
+" NOTE: Look to re-implement this all properly into the existing settings...
+syntax region  tsFlowDefinition     contained                        start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster containedin=tsParen
+syntax region  tsFlowArgumentDef    contained                        start=/:/    end=/\%(\s*[,)]\|=>\@!\)\@=/ contains=@tsFlowCluster
+syntax region  tsFlowArray          contained matchgroup=tsFlowNoise start=/\[/   end=/\]/        contains=@tsFlowCluster,tsComment fold
+syntax region  tsFlowObject         contained matchgroup=tsFlowNoise start=/{/    end=/}/         contains=@tsFlowCluster,tsComment fold
+syntax region  tsFlowExactObject    contained matchgroup=tsFlowNoise start=/{|/   end=/|}/       contains=@tsFlowCluster,tsComment fold
+syntax region  tsFlowParens         contained matchgroup=tsFlowNoise start=/(/  end=/)/ contains=@tsFlowCluster nextgroup=tsFlowArrow skipwhite keepend extend fold
+syntax match   tsFlowNoise          contained /[:;,<>]/
+syntax keyword tsFlowType           contained boolean number string null void any mixed JSON array Function object array bool class
+syntax keyword tsFlowTypeof         contained typeof skipempty skipwhite nextgroup=tsFlowTypeCustom,tsFlowType
+syntax match   tsFlowTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempty nextgroup=tsFlowGeneric
+syntax region  tsFlowGeneric                  matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster containedin=@tsExpression,tsFlowDeclareBlock
+syntax region  tsFlowFunctionGeneric    contained matchgroup=tsFlowNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsFlowCluster nextgroup=tsFuncArgs
+" syntax region  tsFlowFunctionGeneric contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
+" syntax region  tsFlowObjectGeneric  contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster nextgroup=tsFuncArgs
+syntax match   tsFlowArrow          contained /=>/ skipwhite skipempty nextgroup=tsFlowType,tsFlowTypeCustom,tsFlowParens
+syntax match   tsFlowObjectKey      contained /[0-9a-zA-Z_$?]*\(\s*:\)\@=/ contains=tsFunctionKey,tsFlowMaybe skipwhite skipempty nextgroup=tsObjectValue containedin=tsObject
+syntax match   tsFlowOrOperator     contained /|/ skipwhite skipempty nextgroup=@tsFlowCluster
+syntax keyword tsFlowImportType     contained type typeof skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup
+syntax match   tsFlowWildcard       contained /*/
+syntax region  tsFlowString         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFlowOrOperator
 
-" Merge flow into this file...
-runtime extras/ts.vim
+syntax match   tsFlowReturn         contained /:\s*/ contains=tsFlowNoise skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowArrow,tsFlowReturnParens
+syntax region  tsFlowReturnObject   contained matchgroup=tsFlowNoise start=/{/    end=/}/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp extend fold
+syntax region  tsFlowReturnArray    contained matchgroup=tsFlowNoise start=/\[/   end=/\]/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp fold
+syntax region  tsFlowReturnParens   contained matchgroup=tsFlowNoise start=/(/    end=/)/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArrow fold
+syntax match   tsFlowReturnArrow    contained /=>/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
+syntax match   tsFlowReturnKeyword  contained /\k\+/ contains=tsFlowType,tsFlowTypeCustom skipwhite skipempty nextgroup=tsFlowReturnGroup,tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
+syntax match   tsFlowReturnMaybe    contained /?/ skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowReturnKeyword,tsFlowReturnObject,tsFlowReturnParens
+syntax region  tsFlowReturnGroup    contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp
+syntax match   tsFlowReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
+syntax match   tsFlowWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
+syntax keyword tsFlowTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsFlowReturnCluster
+syntax region  tsFlowReturnString   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp
+
+syntax region  tsFlowClassGroup         contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassBlock
+syntax region  tsFlowClassFunctionGroup contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
+syntax match   tsFlowObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsFlowObjectGeneric containedin=tsObject
+
+syntax region  tsFlowTypeStatement                                   start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsFlowTypeOperator oneline skipwhite skipempty nextgroup=tsFlowTypeValue keepend
+syntax region  tsFlowTypeValue      contained     matchgroup=tsFlowNoise start=/=/ end=/\%(;\|\n\%(\s*|\)\@!\)/ contains=@tsFlowCluster,tsFlowGeneric,tsFlowMaybe
+syntax match   tsFlowTypeOperator   contained /=/ containedin=tsFlowTypeValue
+syntax match   tsFlowTypeOperator   contained /=/
+syntax keyword tsFlowTypeKeyword    contained type
+
+syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
+syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
+syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=tsClassBlock
+syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
+syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
+syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
+
+syntax region  tsFlowModule         contained start=/module/ end=/\%({\|:\)\@=/ skipempty skipwhite nextgroup=tsFlowDeclareBlock contains=tsString
+syntax region  tsFlowInterface      contained start=/interface/ end=/{\@=/ skipempty skipwhite nextgroup=tsFlowInterfaceBlock contains=@tsFlowCluster
+syntax region  tsFlowDeclareBlock   contained matchgroup=tsFlowNoise start=/{/ end=/}/ contains=tsFlowDeclare,tsFlowNoise,tsComment fold
+
+syntax match   tsFlowMaybe          contained /?/
+syntax region  tsFlowInterfaceBlock contained matchgroup=tsFlowNoise start=/{/ end=/}/ contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectSeparator,tsObjectFuncName,tsFlowObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsFlowNoise,tsFlowParens,tsFlowGeneric keepend fold
+
+syntax region  tsFlowParenAnnotation contained start=/:/ end=/[,=)]\@=/ containedin=tsParen contains=@tsFlowCluster
+
+syntax cluster tsFlowReturnCluster            contains=tsFlowNoise,tsFlowReturnObject,tsFlowReturnArray,tsFlowReturnKeyword,tsFlowReturnGroup,tsFlowReturnMaybe,tsFlowReturnOrOp,tsFlowWildcardReturn,tsFlowReturnArrow,tsFlowTypeofReturn,tsFlowGeneric,tsFlowReturnString
+syntax cluster tsFlowCluster                  contains=tsFlowArray,tsFlowObject,tsFlowExactObject,tsFlowNoise,tsFlowTypeof,tsFlowType,tsFlowGeneric,tsFlowMaybe,tsFlowParens,tsFlowOrOperator,tsFlowWildcard,tsFlowString
 
 syntax cluster tsExpression  contains=tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
 syntax cluster tsAll         contains=@tsExpression,tsStorageClass,tsConditional,tsRepeat,tsReturn,tsException,tsTry,tsNoise,tsBlockLabel
 
-" Define the default highlighting.
-" For version 5.7 and earlier: only when not done already
-" For version 5.8 and later: only when an item doesn't have highlighting yet
-if v:version >= 508 || !exists('did_typescript_syn_inits')
-  if v:version < 508
-    let did_typescript_syn_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
-  HiLink tsComment              Comment
-  HiLink tsEnvComment           PreProc
-  HiLink tsParensIfElse         tsParens
-  HiLink tsParensRepeat         tsParens
-  HiLink tsParensSwitch         tsParens
-  HiLink tsParensCatch          tsParens
-  HiLink tsCommentTodo          Todo
-  HiLink tsString               String
-  HiLink tsObjectKeyString      String
-  HiLink tsTemplateString       String
-  HiLink tsObjectStringKey      String
-  HiLink tsClassStringKey       String
-  HiLink tsTaggedTemplate       StorageClass
-  HiLink tsTernaryIfOperator    Operator
-  HiLink tsRegexpString         String
-  HiLink tsRegexpBoundary       SpecialChar
-  HiLink tsRegexpQuantifier     SpecialChar
-  HiLink tsRegexpOr             Conditional
-  HiLink tsRegexpMod            SpecialChar
-  HiLink tsRegexpBackRef        SpecialChar
-  HiLink tsRegexpGroup          tsRegexpString
-  HiLink tsRegexpCharClass      Character
-  HiLink tsCharacter            Character
-  HiLink tsPrototype            Special
-  HiLink tsConditional          Conditional
-  HiLink tsBranch               Conditional
-  HiLink tsLabel                Label
-  HiLink tsReturn               Statement
-  HiLink tsRepeat               Repeat
-  HiLink tsDo                   Repeat
-  HiLink tsStatement            Statement
-  HiLink tsException            Exception
-  HiLink tsTry                  Exception
-  HiLink tsFinally              Exception
-  HiLink tsCatch                Exception
-  HiLink tsAsyncKeyword         Keyword
-  HiLink tsForAwait             Keyword
-  HiLink tsArrowFunction        Type
-  HiLink tsFunction             Type
-  HiLink tsGenerator            tsFunction
-  HiLink tsArrowFuncArgs        tsFuncArgs
-  HiLink tsFuncName             Function
-  HiLink tsFuncCall             Function
-  HiLink tsClassFuncName        tsFuncName
-  HiLink tsObjectFuncName       Function
-  HiLink tsArguments            Special
-  HiLink tsError                Error
-  HiLink tsParensError          Error
-  HiLink tsOperatorKeyword      tsOperator
-  HiLink tsOperator             Operator
-  HiLink tsOf                   Operator
-  HiLink tsStorageClass         StorageClass
-  HiLink tsClassKeyword         Keyword
-  HiLink tsExtendsKeyword       Keyword
-  HiLink tsThis                 Special
-  HiLink tsSuper                Constant
-  HiLink tsNan                  Number
-  HiLink tsNull                 Type
-  HiLink tsUndefined            Type
-  HiLink tsNumber               Number
-  HiLink tsFloat                Float
-  HiLink tsBooleanTrue          Boolean
-  HiLink tsBooleanFalse         Boolean
-  HiLink tsObjectColon          tsNoise
-  HiLink tsNoise                Noise
-  HiLink tsDot                  Noise
-  HiLink tsBrackets             Noise
-  HiLink tsParens               Noise
-  HiLink tsBraces               Noise
-  HiLink tsFuncBraces           Noise
-  HiLink tsFuncParens           Noise
-  HiLink tsClassBraces          Noise
-  HiLink tsClassNoise           Noise
-  HiLink tsIfElseBraces         Noise
-  HiLink tsTryCatchBraces       Noise
-  HiLink tsModuleBraces         Noise
-  HiLink tsObjectBraces         Noise
-  HiLink tsObjectSeparator      Noise
-  HiLink tsFinallyBraces        Noise
-  HiLink tsRepeatBraces         Noise
-  HiLink tsSwitchBraces         Noise
-  HiLink tsSpecial              Special
-  HiLink tsTemplateBraces       Noise
-  HiLink tsGlobalObjects        Constant
-  HiLink tsGlobalNodeObjects    Constant
-  HiLink tsExceptions           Constant
-  HiLink tsBuiltins             Constant
-  HiLink tsImport               Include
-  HiLink tsExport               Include
-  HiLink tsExportDefault        StorageClass
-  HiLink tsExportDefaultGroup   tsExportDefault
-  HiLink tsModuleAs             Include
-  HiLink tsModuleComma          tsNoise
-  HiLink tsModuleAsterisk       Noise
-  HiLink tsFrom                 Include
-  HiLink tsDecorator            Special
-  HiLink tsDecoratorFunction    Function
-  HiLink tsParensDecorator      tsParens
-  HiLink tsFuncArgOperator      tsFuncArgs
-  HiLink tsClassProperty        tsObjectKey
-  HiLink tsObjectShorthandProp  tsObjectKey
-  HiLink tsSpreadOperator       Operator
-  HiLink tsRestOperator         Operator
-  HiLink tsRestExpression       tsFuncArgs
-  HiLink tsSwitchColon          Noise
-  HiLink tsClassMethodType      Type
-  HiLink tsObjectMethodType     Type
-  HiLink tsClassDefinition      tsFuncName
-  HiLink tsBlockLabel           Identifier
-  HiLink tsBlockLabelKey        tsBlockLabel
+hi def link tsComment              Comment
+hi def link tsEnvComment           PreProc
+hi def link tsParensIfElse         tsParens
+hi def link tsParensRepeat         tsParens
+hi def link tsParensSwitch         tsParens
+hi def link tsParensCatch          tsParens
+hi def link tsCommentTodo          Todo
+hi def link tsString               String
+hi def link tsObjectKeyString      String
+hi def link tsTemplateString       String
+hi def link tsObjectStringKey      String
+hi def link tsClassStringKey       String
+hi def link tsTaggedTemplate       StorageClass
+hi def link tsTernaryIfOperator    Operator
+hi def link tsRegexpString         String
+hi def link tsRegexpBoundary       SpecialChar
+hi def link tsRegexpQuantifier     SpecialChar
+hi def link tsRegexpOr             Conditional
+hi def link tsRegexpMod            SpecialChar
+hi def link tsRegexpBackRef        SpecialChar
+hi def link tsRegexpGroup          tsRegexpString
+hi def link tsRegexpCharClass      Character
+hi def link tsCharacter            Character
+hi def link tsPrototype            Special
+hi def link tsConditional          Conditional
+hi def link tsBranch               Conditional
+hi def link tsLabel                Label
+hi def link tsReturn               Statement
+hi def link tsRepeat               Repeat
+hi def link tsDo                   Repeat
+hi def link tsStatement            Statement
+hi def link tsException            Exception
+hi def link tsTry                  Exception
+hi def link tsFinally              Exception
+hi def link tsCatch                Exception
+hi def link tsAsyncKeyword         Keyword
+hi def link tsForAwait             Keyword
+hi def link tsArrowFunction        Type
+hi def link tsFunction             Type
+hi def link tsGenerator            tsFunction
+hi def link tsArrowFuncArgs        tsFuncArgs
+hi def link tsFuncName             Function
+hi def link tsFuncCall             Function
+hi def link tsClassFuncName        tsFuncName
+hi def link tsObjectFuncName       Function
+hi def link tsArguments            Special
+hi def link tsError                Error
+hi def link tsParensError          Error
+hi def link tsOperatorKeyword      tsOperator
+hi def link tsOperator             Operator
+hi def link tsOf                   Operator
+hi def link tsStorageClass         StorageClass
+hi def link tsClassKeyword         Keyword
+hi def link tsExtendsKeyword       Keyword
+hi def link tsThis                 Special
+hi def link tsSuper                Constant
+hi def link tsNan                  Number
+hi def link tsNull                 Type
+hi def link tsUndefined            Type
+hi def link tsNumber               Number
+hi def link tsFloat                Float
+hi def link tsBooleanTrue          Boolean
+hi def link tsBooleanFalse         Boolean
+hi def link tsObjectColon          tsNoise
+hi def link tsNoise                Noise
+hi def link tsDot                  Noise
+hi def link tsBrackets             Noise
+hi def link tsParens               Noise
+hi def link tsBraces               Noise
+hi def link tsFuncBraces           Noise
+hi def link tsFuncParens           Noise
+hi def link tsClassBraces          Noise
+hi def link tsClassNoise           Noise
+hi def link tsIfElseBraces         Noise
+hi def link tsTryCatchBraces       Noise
+hi def link tsModuleBraces         Noise
+hi def link tsObjectBraces         Noise
+hi def link tsObjectSeparator      Noise
+hi def link tsFinallyBraces        Noise
+hi def link tsRepeatBraces         Noise
+hi def link tsSwitchBraces         Noise
+hi def link tsSpecial              Special
+hi def link tsTemplateBraces       Noise
+hi def link tsGlobalObjects        Constant
+hi def link tsGlobalNodeObjects    Constant
+hi def link tsExceptions           Constant
+hi def link tsBuiltins             Constant
+hi def link tsImport               Include
+hi def link tsExport               Include
+hi def link tsExportDefault        StorageClass
+hi def link tsExportDefaultGroup   tsExportDefault
+hi def link tsModuleAs             Include
+hi def link tsModuleComma          tsNoise
+hi def link tsModuleAsterisk       Noise
+hi def link tsFrom                 Include
+hi def link tsDecorator            Special
+hi def link tsDecoratorFunction    Function
+hi def link tsParensDecorator      tsParens
+hi def link tsFuncArgOperator      tsFuncArgs
+hi def link tsClassProperty        tsObjectKey
+hi def link tsObjectShorthandProp  tsObjectKey
+hi def link tsSpreadOperator       Operator
+hi def link tsRestOperator         Operator
+hi def link tsRestExpression       tsFuncArgs
+hi def link tsSwitchColon          Noise
+hi def link tsClassMethodType      Type
+hi def link tsObjectMethodType     Type
+hi def link tsClassDefinition      tsFuncName
+hi def link tsBlockLabel           Identifier
+hi def link tsBlockLabelKey        tsBlockLabel
 
-  HiLink tsDestructuringBraces     Noise
-  HiLink tsDestructuringProperty   tsFuncArgs
-  HiLink tsDestructuringAssignment tsObjectKey
-  HiLink tsDestructuringNoise      Noise
+hi def link tsDestructuringBraces     Noise
+hi def link tsDestructuringProperty   tsFuncArgs
+hi def link tsDestructuringAssignment tsObjectKey
+hi def link tsDestructuringNoise      Noise
 
-  HiLink tsCommentFunction      tsComment
-  HiLink tsCommentClass         tsComment
-  HiLink tsCommentIfElse        tsComment
-  HiLink tsCommentRepeat        tsComment
+hi def link tsCommentFunction      tsComment
+hi def link tsCommentClass         tsComment
+hi def link tsCommentIfElse        tsComment
+hi def link tsCommentRepeat        tsComment
 
-  HiLink tsDomErrNo             Constant
-  HiLink tsDomNodeConsts        Constant
-  HiLink tsDomElemAttrs         Label
-  HiLink tsDomElemFuncs         PreProc
+hi def link tsDomErrNo             Constant
+hi def link tsDomNodeConsts        Constant
+hi def link tsDomElemAttrs         Label
+hi def link tsDomElemFuncs         PreProc
 
-  HiLink tsHtmlEvents           Special
-  HiLink tsHtmlElemAttrs        Label
-  HiLink tsHtmlElemFuncs        PreProc
+hi def link tsHtmlEvents           Special
+hi def link tsHtmlElemAttrs        Label
+hi def link tsHtmlElemFuncs        PreProc
 
-  HiLink tsCssStyles            Label
+hi def link tsCssStyles            Label
 
-  delcommand HiLink
-endif
+hi def link tsFlowDefinition         PreProc
+hi def link tsFlowClassDef           tsFlowDefinition
+hi def link tsFlowArgumentDef        tsFlowDefinition
+hi def link tsFlowType               Type
+hi def link tsFlowTypeCustom         PreProc
+hi def link tsFlowTypeof             PreProc
+hi def link tsFlowTypeofReturn       PreProc
+hi def link tsFlowArray              PreProc
+hi def link tsFlowObject             PreProc
+hi def link tsFlowExactObject        PreProc
+hi def link tsFlowParens             PreProc
+hi def link tsFlowGeneric            PreProc
+hi def link tsFlowString             PreProc
+hi def link tsFlowReturnString       PreProc
+hi def link tsFlowFunctionGeneric    tsFlowGeneric
+hi def link tsFlowObjectGeneric      tsFlowGeneric
+hi def link tsFlowReturn             PreProc
+hi def link tsFlowParenAnnotation    PreProc
+hi def link tsFlowReturnObject       tsFlowReturn
+hi def link tsFlowReturnArray        tsFlowArray
+hi def link tsFlowReturnParens       tsFlowParens
+hi def link tsFlowReturnGroup        tsFlowGeneric
+hi def link tsFlowClassGroup         PreProc
+hi def link tsFlowClassFunctionGroup PreProc
+hi def link tsFlowArrow              PreProc
+hi def link tsFlowReturnArrow        PreProc
+hi def link tsFlowTypeStatement      PreProc
+hi def link tsFlowTypeKeyword        PreProc
+hi def link tsFlowTypeOperator       Operator
+hi def link tsFlowMaybe              PreProc
+hi def link tsFlowReturnMaybe        PreProc
+hi def link tsFlowClassProperty      tsClassProperty
+hi def link tsFlowDeclare            PreProc
+hi def link tsFlowExport             PreProc
+hi def link tsFlowModule             PreProc
+hi def link tsFlowInterface          PreProc
+hi def link tsFlowNoise              Noise
+hi def link tsFlowObjectKey          tsObjectKey
+hi def link tsFlowOrOperator         tsOperator
+hi def link tsFlowReturnOrOp         tsFlowOrOperator
+hi def link tsFlowWildcard           PreProc
+hi def link tsFlowWildcardReturn     PreProc
+hi def link tsFlowImportType         PreProc
+hi def link tsFlowTypeValue          PreProc
+hi def link tsFlowReturnKeyword      PreProc
+hi def link tsFlowObjectFuncName     tsObjectFuncName
 
 let b:current_syntax = 'typescript'
-if main_syntax ==# 'typescript'
+if main_syntax == 'typescript'
   unlet main_syntax
 endif
