@@ -10,16 +10,7 @@ if !exists('main_syntax')
   let main_syntax = 'typescript'
 endif
 
-" NOTE: Not sure if I want to keep this... but I've noticed some issues
-" lately...
-syntax clear
-
-" Dollar sign is permitted anywhere in an identifier
-if (v:version > 704 || v:version == 704 && has('patch1142')) && main_syntax ==# 'typescript'
-  syntax iskeyword @,48-57,_,192-255,$
-else
-  setlocal iskeyword+=$
-endif
+setlocal iskeyword+=$
 
 syntax sync fromstart
 " TODO: Figure out what type of casing I need
