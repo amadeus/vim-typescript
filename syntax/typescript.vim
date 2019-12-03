@@ -242,7 +242,7 @@ syntax region  tsFlowReturnParens   contained matchgroup=tsFlowNoise start=/(/  
 syntax match   tsFlowReturnArrow    contained /=>/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
 syntax match   tsFlowReturnKeyword  contained /\k\+/ contains=tsFlowType,tsFlowTypeCustom skipwhite skipempty nextgroup=tsFlowReturnGroup,tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
 syntax match   tsFlowReturnMaybe    contained /?/ skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowReturnKeyword,tsFlowReturnObject,tsFlowReturnParens
-syntax region  tsFlowReturnGroup    contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp
+syntax region  tsFlowReturnGroup    contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
 syntax match   tsFlowReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
 syntax match   tsFlowWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
 syntax keyword tsFlowTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsFlowReturnCluster
