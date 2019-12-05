@@ -277,6 +277,8 @@ syntax region  tsFlowParenAnnotation contained start=/:/ end=/[,=)]\@=/ containe
 syntax cluster tsFlowReturnCluster            contains=tsFlowNoise,tsFlowReturnObject,tsFlowReturnArray,tsFlowReturnKeyword,tsFlowReturnGroup,tsFlowReturnMaybe,tsFlowReturnOrOp,tsFlowWildcardReturn,tsFlowReturnArrow,tsFlowTypeofReturn,tsFlowGeneric,tsFlowReturnString
 syntax cluster tsFlowCluster                  contains=tsFlowArray,tsFlowObject,tsFlowExactObject,tsFlowNoise,tsFlowTypeof,tsFlowType,tsFlowGeneric,tsFlowMaybe,tsFlowParens,tsFlowOrOperator,tsFlowWildcard,tsFlowString
 
+syntax keyword tsTypeAs as nextgroup=tsFlowReturn skipwhite skipempty
+
 syntax cluster tsExpression  contains=tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
 syntax cluster tsAll         contains=@tsExpression,tsStorageClass,tsConditional,tsRepeat,tsReturn,tsException,tsTry,tsNoise,tsBlockLabel
 
@@ -458,6 +460,7 @@ hi def link tsFlowImportType         PreProc
 hi def link tsFlowTypeValue          PreProc
 hi def link tsFlowReturnKeyword      PreProc
 hi def link tsFlowObjectFuncName     tsObjectFuncName
+hi def link tsTypeAs                 PreProc
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
