@@ -165,7 +165,7 @@ syntax match   tsArrowFuncArgs  /\<\K\k*\ze\s*=>/ skipwhite contains=tsFuncArgs 
 " Matches a series of arguments surrounded in parens
 syntax match   tsArrowFuncArgs  /([^()]*)\ze\s*=>/ contains=tsFuncArgs skipempty skipwhite nextgroup=tsArrowFunction extend
 
-exe 'syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup skipwhite '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '')
+exe 'syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup,tsFlowGeneric skipwhite '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '')
 exe 'syntax match tsArrowFunction /=>/           skipwhite skipempty nextgroup=tsFuncBlock,tsCommentFunction '.(exists('g:typescript_conceal_arrow_function') ? 'conceal cchar='.g:typescript_conceal_arrow_function : '')
 exe 'syntax match tsArrowFunction /()\ze\s*=>/   skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_noarg_arrow_function') ? 'conceal cchar='.g:typescript_conceal_noarg_arrow_function : '')
 exe 'syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_underscore_arrow_function') ? 'conceal cchar='.g:typescript_conceal_underscore_arrow_function : '')
@@ -224,7 +224,7 @@ syntax match   tsFlowNoise          contained /[:;,<>]/
 syntax keyword tsFlowType           contained boolean number string null void any mixed JSON array Function object array bool class
 syntax keyword tsFlowTypeof         contained typeof skipempty skipwhite nextgroup=tsFlowTypeCustom,tsFlowType
 syntax match   tsFlowTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempty nextgroup=tsFlowGeneric
-syntax region  tsFlowGeneric                  matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster containedin=@tsExpression,tsFlowDeclareBlock
+syntax region  tsFlowGeneric                  matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster containedin=@tsExpression,tsFlowDeclareBlock skipempty skipwhite nextgroup=tsFuncArgs
 syntax region  tsFlowFunctionGeneric    contained matchgroup=tsFlowNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsFlowCluster nextgroup=tsFuncArgs
 " syntax region  tsFlowFunctionGeneric contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
 " syntax region  tsFlowObjectGeneric  contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster nextgroup=tsFuncArgs
