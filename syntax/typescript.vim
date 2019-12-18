@@ -134,7 +134,7 @@ syntax region  tsParenRepeat        contained matchgroup=tsParensRepeat        s
 syntax region  tsParenSwitch        contained matchgroup=tsParensSwitch        start=/(/  end=/)/  contains=@tsAll skipwhite skipempty nextgroup=tsSwitchBlock extend fold
 syntax region  tsParenCatch         contained matchgroup=tsParensCatch         start=/(/  end=/)/  skipwhite skipempty nextgroup=tsTryCatchBlock extend fold
 syntax region  tsFuncArgs           contained matchgroup=tsFuncParens          start=/(/  end=/)/  contains=tsFuncArgCommas,tsComment,tsFuncArgExpression,tsDestructuringBlock,tsDestructuringArray,tsRestExpression,tsFlowArgumentDef skipwhite skipempty nextgroup=tsCommentFunction,tsFuncBlock,tsFlowReturn extend fold
-syntax region  tsClassBlock         contained matchgroup=tsClassBraces         start=/{/  end=/}/  contains=tsClassFuncName,tsClassMethodType,tsArrowFunction,tsArrowFuncArgs,tsComment,tsGenerator,tsDecorator,tsClassProperty,tsClassPropertyComputed,tsClassStringKey,tsAsyncKeyword,tsNoise extend fold
+syntax region  tsClassBlock         contained matchgroup=tsClassBraces         start=/{/  end=/}/  contains=tsClassFuncName,tsClassMethodType,tsArrowFunction,tsArrowFuncArgs,tsComment,tsGenerator,tsDecorator,tsClassProperty,tsClassPropertyComputed,tsClassStringKey,tsAsyncKeyword,tsClassPrivateProperty,tsNoise extend fold
 syntax region  tsFuncBlock          contained matchgroup=tsFuncBraces          start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
 syntax region  tsIfElseBlock        contained matchgroup=tsIfElseBraces        start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
 syntax region  tsTryCatchBlock      contained matchgroup=tsTryCatchBraces      start=/{/  end=/}/  contains=@tsAll,tsBlock skipwhite skipempty nextgroup=tsCatch,tsFinally extend fold
@@ -178,6 +178,7 @@ syntax match   tsClassFuncName          contained /\<\K\k*\ze\s*[(<]/ skipwhite 
 syntax match   tsClassMethodType        contained /\<\%([gs]et\|static\)\ze\s\+\K\k*/ skipwhite skipempty nextgroup=tsAsyncKeyword,tsClassFuncName,tsClassProperty
 syntax region  tsClassDefinition                  start=/\<class\>/ end=/\(\<extends\>\s\+\)\@<!{\@=/ contains=tsClassKeyword,tsExtendsKeyword,tsClassNoise,@tsExpression,tsFlowClassGroup skipwhite skipempty nextgroup=tsCommentClass,tsClassBlock,tsFlowClassGroup
 syntax match   tsClassProperty          contained /\<\K\k*\ze\s*=/ skipwhite skipempty nextgroup=tsClassValue,tsFlowClassDef
+syntax keyword tsClassPrivateProperty   contained private skipwhite skipempty nextgroup=tsClassProperty
 syntax region  tsClassValue             contained start=/=/ end=/\_[;}]\@=/ contains=@tsExpression
 syntax region  tsClassPropertyComputed  contained matchgroup=tsBrackets start=/\[/ end=/]/ contains=@tsExpression skipwhite skipempty nextgroup=tsFuncArgs,tsClassValue extend
 syntax region  tsClassStringKey         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1\|$+  contains=tsSpecial,@Spell extend skipwhite skipempty nextgroup=tsFuncArgs
@@ -392,6 +393,7 @@ hi def link tsObjectMethodType     Type
 hi def link tsClassDefinition      tsFuncName
 hi def link tsBlockLabel           Identifier
 hi def link tsBlockLabelKey        tsBlockLabel
+hi def link tsClassPrivateProperty Statement
 
 hi def link tsDestructuringBraces     Noise
 hi def link tsDestructuringProperty   tsFuncArgs
