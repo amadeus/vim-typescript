@@ -109,7 +109,7 @@ syntax match   tsGlobalNodeObjects  /\<require\>/ containedin=tsFuncCall
 syntax keyword tsExceptions         Error EvalError InternalError RangeError ReferenceError StopIteration SyntaxError TypeError URIError
 syntax keyword tsBuiltins           decodeURI decodeURIComponent encodeURI encodeURIComponent eval isFinite isNaN parseFloat parseInt uneval
 " DISCUSS: How imporant is this, really? Perhaps it should be linked to an error because I assume the keywords are reserved?
-syntax keyword tsFutureKeys         abstract enum int short boolean interface byte long char final native synchronized float package throws goto private transient implements protected volatile double public
+syntax keyword tsFutureKeys         abstract enum int short boolean byte long char final native synchronized float package throws goto private transient implements protected volatile double public
 
 " DISCUSS: Should we really be matching stuff like this?
 " DOM2 Objects
@@ -253,7 +253,9 @@ syntax region  tsFlowClassGroup         contained matchgroup=tsFlowNoise start=/
 syntax region  tsFlowClassFunctionGroup contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
 syntax match   tsFlowObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsFlowObjectGeneric containedin=tsObject
 
-syntax region  tsFlowTypeStatement                                   start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsFlowTypeOperator oneline skipwhite skipempty nextgroup=tsFlowTypeValue keepend
+syntax region  tsFlowTypeStatement             start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsFlowTypeOperator,tsFlowTypeName,tsFlowTypeDef oneline skipwhite skipempty nextgroup=tsFlowTypeValue keepend
+syntax match   tsFlowTypeName       contained  /\k\+/
+syntax keyword tsFlowTypeDef        contained  type
 syntax region  tsFlowTypeValue      contained     matchgroup=tsFlowNoise start=/=/ end=/\%(;\|\n\%(\s*|\)\@!\)/ contains=@tsFlowCluster,tsFlowGeneric,tsFlowMaybe
 syntax match   tsFlowTypeOperator   contained /=/ containedin=tsFlowTypeValue
 syntax match   tsFlowTypeOperator   contained /=/
@@ -261,7 +263,7 @@ syntax keyword tsFlowTypeKeyword    contained type
 
 syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
 syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=tsClassBlock
+syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster
 syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
 syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
 syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
@@ -463,6 +465,9 @@ hi def link tsFlowTypeValue          PreProc
 hi def link tsFlowReturnKeyword      PreProc
 hi def link tsFlowObjectFuncName     tsObjectFuncName
 hi def link tsTypeAs                 PreProc
+hi def link tsFlowInterfaceName      tsFlowType
+hi def link tsFlowTypeName           tsFlowType
+hi def link tsFlowTypeDef            PreProc
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
