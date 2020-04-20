@@ -109,7 +109,13 @@ syntax match   tsGlobalNodeObjects  /\<require\>/ containedin=tsFuncCall
 syntax keyword tsExceptions         Error EvalError InternalError RangeError ReferenceError StopIteration SyntaxError TypeError URIError
 syntax keyword tsBuiltins           decodeURI decodeURIComponent encodeURI encodeURIComponent eval isFinite isNaN parseFloat parseInt uneval
 " DISCUSS: How imporant is this, really? Perhaps it should be linked to an error because I assume the keywords are reserved?
-syntax keyword tsFutureKeys         abstract enum int short boolean byte long char final native synchronized float package throws goto private transient implements protected volatile double public
+syntax keyword tsFutureKeys         abstract int short boolean byte long char final native synchronized float package throws goto private transient implements protected volatile double public
+
+syntax keyword tsEnum               enum  nextgroup=tsEnumName skipwhite skipempty
+syntax match   tsEnumName  contained /\k\+/ nextgroup=tsEnumBlock
+syntax match   tsEnumKey   contained /\k\+/
+syntax match   tsEnumComma contained ","
+syntax match   tsEnumEquals contained "="
 
 " DISCUSS: Should we really be matching stuff like this?
 " DOM2 Objects
@@ -145,6 +151,7 @@ syntax region  tsDestructuringBlock contained matchgroup=tsDestructuringBraces s
 syntax region  tsDestructuringArray contained matchgroup=tsDestructuringBraces start=/\[/ end=/\]/ contains=tsDestructuringPropertyValue,tsDestructuringNoise,tsDestructuringProperty,tsSpreadExpression,tsDestructuringBlock,tsDestructuringArray,tsComment nextgroup=tsFlowDefinition extend fold
 syntax region  tsObject             contained matchgroup=tsObjectBraces        start=/{/  end=/}/  contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectShorthandProp,tsObjectSeparator,tsObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsDecorator,tsAsyncKeyword extend fold
 syntax region  tsBlock                        matchgroup=tsBraces              start=/{/  end=/}/  contains=@tsAll,tsSpreadExpression extend fold
+syntax region  tsEnumBlock                    matchgroup=tsBraces              start=/{/  end=/}/  contains=tsEnumComma,tsEnumKey,tsEnumEquals,tsString,tsNumber,tsOperator extend fold
 syntax region  tsModuleGroup        contained matchgroup=tsModuleBraces        start=/{/ end=/}/   contains=tsModuleKeyword,tsModuleComma,tsModuleAs,tsComment,tsFlowTypeKeyword skipwhite skipempty nextgroup=tsFrom fold
 syntax region  tsSpreadExpression   contained matchgroup=tsSpreadOperator      start=/\.\.\./ end=/[,}\]]\@=/ contains=@tsExpression
 syntax region  tsRestExpression     contained matchgroup=tsRestOperator        start=/\.\.\./ end=/[,)]\@=/
@@ -468,6 +475,10 @@ hi def link tsTypeAs                 PreProc
 hi def link tsFlowInterfaceName      tsFlowType
 hi def link tsFlowTypeName           tsFlowType
 hi def link tsFlowTypeDef            PreProc
+hi def link tsEnum                   StorageClass
+hi def link tsEnumKey                tsFlowObjectKey
+hi def link tsEnumEquals             tsOperator
+hi def link tsEnumComma              Noise
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
