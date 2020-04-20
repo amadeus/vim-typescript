@@ -270,7 +270,8 @@ syntax keyword tsFlowTypeKeyword    contained type
 
 syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
 syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster
+syntax keyword tsFlowInterfaceExtends         extends skipwhite skipempty nextgroup=tsFlowInterfaceName
+syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster,tsFlowInterfaceExtends
 syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
 syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
 syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
@@ -479,6 +480,7 @@ hi def link tsEnum                   StorageClass
 hi def link tsEnumKey                tsFlowObjectKey
 hi def link tsEnumEquals             tsOperator
 hi def link tsEnumComma              Noise
+hi def link tsFlowInterfaceExtends   PreProc
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
