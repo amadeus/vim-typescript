@@ -29,6 +29,7 @@ syntax match   tsVariableDef    contained /\<\K\k*/ skipwhite skipempty nextgrou
 syntax keyword tsOperatorKeyword delete instanceof typeof void new in of skipwhite skipempty nextgroup=@tsExpression
 syntax match   tsOperator       "[-!|&+<>=%/*~^]" skipwhite skipempty nextgroup=@tsExpression
 syntax match   tsOperator       /::/ skipwhite skipempty nextgroup=@tsExpression
+syntax keyword tsOperator       as
 syntax keyword tsBooleanTrue    true
 syntax keyword tsBooleanFalse   false
 
