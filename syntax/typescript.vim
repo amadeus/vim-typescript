@@ -152,7 +152,7 @@ syntax region  tsDestructuringBlock contained matchgroup=tsDestructuringBraces s
 syntax region  tsDestructuringArray contained matchgroup=tsDestructuringBraces start=/\[/ end=/\]/ contains=tsDestructuringPropertyValue,tsDestructuringNoise,tsDestructuringProperty,tsSpreadExpression,tsDestructuringBlock,tsDestructuringArray,tsComment nextgroup=tsFlowDefinition extend fold
 syntax region  tsObject             contained matchgroup=tsObjectBraces        start=/{/  end=/}/  contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectShorthandProp,tsObjectSeparator,tsObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsDecorator,tsAsyncKeyword extend fold
 syntax region  tsBlock                        matchgroup=tsBraces              start=/{/  end=/}/  contains=@tsAll,tsSpreadExpression extend fold
-syntax region  tsEnumBlock                    matchgroup=tsBraces              start=/{/  end=/}/  contains=tsEnumComma,tsEnumKey,tsEnumEquals,tsString,tsNumber,tsOperator extend fold
+syntax region  tsEnumBlock                    matchgroup=tsBraces              start=/{/  end=/}/  contains=tsEnumComma,tsEnumKey,tsEnumEquals,tsString,tsNumber,tsOperator,tsComment extend fold
 syntax region  tsModuleGroup        contained matchgroup=tsModuleBraces        start=/{/ end=/}/   contains=tsModuleKeyword,tsModuleComma,tsModuleAs,tsComment,tsFlowTypeKeyword skipwhite skipempty nextgroup=tsFrom fold
 syntax region  tsSpreadExpression   contained matchgroup=tsSpreadOperator      start=/\.\.\./ end=/[,}\]]\@=/ contains=@tsExpression
 syntax region  tsRestExpression     contained matchgroup=tsRestOperator        start=/\.\.\./ end=/[,)]\@=/
@@ -272,7 +272,8 @@ syntax keyword tsFlowTypeKeyword    contained type
 syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
 syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
 syntax keyword tsFlowInterfaceExtends         extends skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster,tsFlowInterfaceExtends
+syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster,tsFlowInterfaceExtends,tsFlowGenericInterface
+syntax region  tsFlowGenericInterface contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFlowObject
 syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
 syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
 syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
@@ -482,6 +483,7 @@ hi def link tsEnumKey                tsFlowObjectKey
 hi def link tsEnumEquals             tsOperator
 hi def link tsEnumComma              Noise
 hi def link tsFlowInterfaceExtends   PreProc
+hi def link tsFlowGenericInterface   PreProc
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
