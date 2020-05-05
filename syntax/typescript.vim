@@ -173,7 +173,7 @@ syntax match   tsArrowFuncArgs  /\<\K\k*\ze\s*=>/ skipwhite contains=tsFuncArgs 
 " Matches a series of arguments surrounded in parens
 syntax match   tsArrowFuncArgs  /([^()]*)\ze\s*=>/ contains=tsFuncArgs skipempty skipwhite nextgroup=tsArrowFunction extend
 
-exe 'syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup skipwhite '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '')
+exe 'syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup,tsFlowFunctionGeneric skipwhite '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '')
 exe 'syntax match tsArrowFunction /=>/           skipwhite skipempty nextgroup=tsFuncBlock,tsCommentFunction '.(exists('g:typescript_conceal_arrow_function') ? 'conceal cchar='.g:typescript_conceal_arrow_function : '')
 exe 'syntax match tsArrowFunction /()\ze\s*=>/   skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_noarg_arrow_function') ? 'conceal cchar='.g:typescript_conceal_noarg_arrow_function : '')
 exe 'syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_underscore_arrow_function') ? 'conceal cchar='.g:typescript_conceal_underscore_arrow_function : '')
