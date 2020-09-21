@@ -196,7 +196,7 @@ syntax match   tsDestructuringPropertyValue     contained /\k\+/
 syntax match   tsDestructuringProperty          contained /\k\+\ze\s*=/ skipwhite skipempty nextgroup=tsDestructuringValue
 syntax match   tsDestructuringAssignment        contained /\k\+\ze\s*:/ skipwhite skipempty nextgroup=tsDestructuringValueAssignment
 syntax region  tsDestructuringValue             contained start=/=/ end=/[,}\]]\@=/ contains=@tsExpression extend
-syntax region  tsDestructuringValueAssignment   contained start=/:/ end=/[,}=]\@=/ contains=tsDestructuringPropertyValue,tsDestructuringBlock,tsNoise,tsDestructuringNoise skipwhite skipempty nextgroup=tsDestructuringValue extend
+syntax region  tsDestructuringValueAssignment   contained start=/:/ end=/[,}=]\@=/ contains=tsDestructuringPropertyValue,tsDestructuringBlock,tsDestructuringArray,tsNoise,tsDestructuringNoise skipwhite skipempty nextgroup=tsDestructuringValue extend
 syntax match   tsDestructuringNoise             contained /[,]/
 syntax region  tsDestructuringPropertyComputed  contained matchgroup=tsDestructuringBraces start=/\[/ end=/]/ contains=@tsExpression skipwhite skipempty nextgroup=tsDestructuringValue,tsDestructuringValueAssignment,tsDestructuringNoise extend fold
 
