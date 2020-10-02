@@ -246,7 +246,7 @@ syntax region  tsFlowString         contained start=+\z(["']\)+  skip=+\\\%(\z1\
 
 syntax match   tsFlowReturn         contained /:\s*/ contains=tsFlowNoise skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowArrow,tsFlowReturnParens
 syntax region  tsFlowReturnObject   contained matchgroup=tsFlowNoise start=/{/    end=/}/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp extend fold
-syntax region  tsFlowReturnArray    contained matchgroup=tsFlowNoise start=/\[/   end=/\]/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp fold
+syntax region  tsFlowReturnArray    contained matchgroup=tsFlowNoise start=/\[/   end=/\]/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray fold
 syntax region  tsFlowReturnParens   contained matchgroup=tsFlowNoise start=/(/    end=/)/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArrow fold
 syntax match   tsFlowReturnArrow    contained /=>/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
 syntax match   tsFlowReturnKeyword  contained /\k\+/ contains=tsFlowType,tsFlowTypeCustom skipwhite skipempty nextgroup=tsFlowReturnGroup,tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
