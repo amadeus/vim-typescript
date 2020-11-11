@@ -186,7 +186,7 @@ syntax match   tsClassFuncName          contained /\<\K\k*\ze\s*[(<]/ skipwhite 
 syntax match   tsClassMethodType        contained /\<\%([gs]et\|static\)\ze\s\+\K\k*/ skipwhite skipempty nextgroup=tsAsyncKeyword,tsClassFuncName,tsClassProperty
 syntax region  tsClassDefinition                  start=/\<class\>/ end=/\(\<extends\>\s\+\)\@<!{\@=/ contains=tsClassKeyword,tsExtendsKeyword,tsClassNoise,@tsExpression,tsFlowClassGroup skipwhite skipempty nextgroup=tsCommentClass,tsClassBlock,tsFlowClassGroup
 syntax match   tsClassProperty          contained /\<\K\k*\ze\s*=/ skipwhite skipempty nextgroup=tsClassValue,tsFlowClassDef
-syntax keyword tsClassPrivateProperty   contained private skipwhite skipempty nextgroup=tsClassProperty
+syntax match tsClassPrivateProperty     contained /private\|public\|readonly/ skipwhite skipempty nextgroup=tsClassProperty
 syntax region  tsClassValue             contained start=/=/ end=/\_[;}]\@=/ contains=@tsExpression
 syntax region  tsClassPropertyComputed  contained matchgroup=tsBrackets start=/\[/ end=/]/ contains=@tsExpression skipwhite skipempty nextgroup=tsFuncArgs,tsClassValue extend
 syntax region  tsClassStringKey         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1\|$+  contains=tsSpecial,@Spell extend skipwhite skipempty nextgroup=tsFuncArgs
