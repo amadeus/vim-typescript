@@ -77,13 +77,13 @@ syntax match   tsFunctionKey       contained /\<\K\k*\ze\s*:\s*function\>/
 syntax match   tsObjectMethodType  contained /\<[gs]et\ze\s\+\K\k*/ skipwhite skipempty nextgroup=tsObjectFuncName
 syntax region  tsObjectStringKey   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1\|$+  contains=tsSpecial,@Spell extend skipwhite skipempty nextgroup=tsFuncArgs,tsObjectValue
 
-exe 'syntax keyword tsNull      null             '.(exists('g:typescript_conceal_null')      ? 'conceal cchar='.g:typescript_conceal_null       : '')
-exe 'syntax keyword tsReturn    return contained '.(exists('g:typescript_conceal_return')    ? 'conceal cchar='.g:typescript_conceal_return     : '').' skipwhite nextgroup=@tsExpression'
-exe 'syntax keyword tsUndefined undefined        '.(exists('g:typescript_conceal_undefined') ? 'conceal cchar='.g:typescript_conceal_undefined  : '')
-exe 'syntax keyword tsNan       NaN              '.(exists('g:typescript_conceal_NaN')       ? 'conceal cchar='.g:typescript_conceal_NaN        : '')
-exe 'syntax keyword tsPrototype prototype        '.(exists('g:typescript_conceal_prototype') ? 'conceal cchar='.g:typescript_conceal_prototype  : '')
-exe 'syntax keyword tsThis      this             '.(exists('g:typescript_conceal_this')      ? 'conceal cchar='.g:typescript_conceal_this       : '')
-exe 'syntax keyword tsSuper     super  contained '.(exists('g:typescript_conceal_super')     ? 'conceal cchar='.g:typescript_conceal_super      : '')
+syntax keyword tsNull      null
+syntax keyword tsReturn    return contained  skipwhite nextgroup=@tsExpression
+syntax keyword tsUndefined undefined
+syntax keyword tsNan       NaN
+syntax keyword tsPrototype prototype
+syntax keyword tsThis      this
+syntax keyword tsSuper     super  contained
 
 " Statement Keywords
 syntax match   tsBlockLabel              /\<\K\k*\s*::\@!/    contains=tsNoise skipwhite skipempty nextgroup=tsBlock
@@ -173,10 +173,10 @@ syntax match   tsArrowFuncArgs  /\<\K\k*\ze\s*=>/ skipwhite contains=tsFuncArgs 
 " Matches a series of arguments surrounded in parens
 syntax match   tsArrowFuncArgs  /([^()]*)\ze\s*=>/ contains=tsFuncArgs skipempty skipwhite nextgroup=tsArrowFunction extend
 
-exe 'syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup,tsFlowFunctionGeneric skipwhite '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '')
-exe 'syntax match tsArrowFunction /=>/           skipwhite skipempty nextgroup=tsFuncBlock,tsCommentFunction '.(exists('g:typescript_conceal_arrow_function') ? 'conceal cchar='.g:typescript_conceal_arrow_function : '')
-exe 'syntax match tsArrowFunction /()\ze\s*=>/   skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_noarg_arrow_function') ? 'conceal cchar='.g:typescript_conceal_noarg_arrow_function : '')
-exe 'syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArrowFunction '.(exists('g:typescript_conceal_underscore_arrow_function') ? 'conceal cchar='.g:typescript_conceal_underscore_arrow_function : '')
+syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup,tsFlowFunctionGeneric skipwhite
+syntax match tsArrowFunction /=>/           skipwhite skipempty nextgroup=tsFuncBlock,tsCommentFunction
+syntax match tsArrowFunction /()\ze\s*=>/   skipwhite skipempty nextgroup=tsArrowFunction
+syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArrowFunction
 
 " Classes
 syntax keyword tsClassKeyword           contained class
