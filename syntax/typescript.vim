@@ -98,7 +98,7 @@ syntax keyword tsDo                     do              skipwhite skipempty next
 syntax region  tsSwitchCase   contained matchgroup=tsLabel start=/\<\%(case\|default\)\>/ end=/:\@=/ contains=@tsExpression,tsLabel skipwhite skipempty nextgroup=tsSwitchColon keepend
 syntax keyword tsTry                    try             skipwhite skipempty nextgroup=tsTryCatchBlock
 syntax keyword tsFinally      contained finally         skipwhite skipempty nextgroup=tsFinallyBlock
-syntax keyword tsCatch        contained catch           skipwhite skipempty nextgroup=tsParenCatch
+syntax keyword tsCatch        contained catch           skipwhite skipempty nextgroup=tsParenCatch,tsFinallyBlock
 syntax keyword tsException              throw
 syntax keyword tsAsyncKeyword           async await
 syntax match   tsSwitchColon   contained /::\@!/        skipwhite skipempty nextgroup=tsSwitchBlock
