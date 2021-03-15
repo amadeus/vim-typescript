@@ -271,9 +271,10 @@ syntax keyword tsFlowTypeKeyword    contained type
 
 syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
 syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
+syntax match   tsFlowInterfaceComma  contained /[,]/ skipwhite skipempty skipnl nextgroup=tsFlowInterfaceName
 syntax keyword tsFlowInterfaceExtends         extends skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=@tsFlowCluster,tsFlowInterfaceExtends,tsFlowGenericInterface
-syntax region  tsFlowGenericInterface contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFlowObject
+syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=tsFlowInterfaceComma,@tsFlowCluster,tsFlowInterfaceExtends,tsFlowGenericInterface
+syntax region  tsFlowGenericInterface contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFlowObject,tsFlowInterfaceComma
 syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
 syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
 syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
@@ -484,6 +485,7 @@ hi def link tsEnumEquals             tsOperator
 hi def link tsEnumComma              Noise
 hi def link tsFlowInterfaceExtends   PreProc
 hi def link tsFlowGenericInterface   PreProc
+hi def link tsFlowInterfaceComma     Noise
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
