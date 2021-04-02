@@ -48,7 +48,7 @@ syntax match   tsModuleComma        contained /,/ skipwhite skipempty nextgroup=
 syntax region  tsString           start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+  contains=tsSpecial,@Spell extend
 syntax region  tsTemplateString   start=+`+  skip=+\\`+  end=+`+     contains=tsTemplateExpression,tsSpecial,@Spell extend
 syntax match   tsTaggedTemplate   /\<\K\k*\ze`/ nextgroup=tsTemplateString
-syntax match   tsNumber           /\c\<\%(\d\+\%(e[+-]\=\d\+\)\=\|0b[01]\+\|0o\o\+\|0x\x\+\)\>/
+syntax match   tsNumber           /\c\<\%(\d\+\%(e[+-]\=\d\+\)\=\|0b[01]\+\|0o\o\+\|0x\%(\x\|_\)\+\)\>/
 syntax keyword tsNumber           Infinity
 syntax match   tsFloat            /\c\<\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%(e[+-]\=\d\+\)\=\>/
 
