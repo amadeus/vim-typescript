@@ -25,7 +25,7 @@ syntax match   tsParensError    /[)}\]]/
 
 " Program Keywords
 syntax keyword tsStorageClass   const var let skipwhite skipempty nextgroup=tsDestructuringBlock,tsDestructuringArray,tsVariableDef
-syntax match   tsVariableDef    contained /\<\K\k*/ skipwhite skipempty nextgroup=tsFlowDefinition
+syntax match   tsVariableDef    contained /\<\K\k*/ skipwhite skipempty nextgroup=tsTSCDefinition
 syntax keyword tsOperatorKeyword delete instanceof typeof void new in of skipwhite skipempty nextgroup=@tsExpression
 syntax match   tsOperator       "[-!|&+<>=%/*~^]" skipwhite skipempty nextgroup=@tsExpression
 syntax match   tsOperator       /::/ skipwhite skipempty nextgroup=@tsExpression
@@ -34,15 +34,15 @@ syntax keyword tsBooleanTrue    true
 syntax keyword tsBooleanFalse   false
 
 " Modules
-syntax keyword tsImport                       import skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup,tsFlowImportType
-syntax keyword tsExport                       export skipwhite skipempty nextgroup=@tsAll,tsModuleGroup,tsExportDefault,tsModuleAsterisk,tsModuleKeyword,tsFlowTypeStatement
+syntax keyword tsImport                       import skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup,tsTSCImportType
+syntax keyword tsExport                       export skipwhite skipempty nextgroup=@tsAll,tsModuleGroup,tsExportDefault,tsModuleAsterisk,tsModuleKeyword,tsTSCTypeStatement
 syntax match   tsModuleKeyword      contained /\<\K\k*/ skipwhite skipempty nextgroup=tsModuleAs,tsFrom,tsModuleComma
 syntax keyword tsExportDefault      contained default skipwhite skipempty nextgroup=@tsExpression
 syntax keyword tsExportDefaultGroup contained default skipwhite skipempty nextgroup=tsModuleAs,tsFrom,tsModuleComma
 syntax match   tsModuleAsterisk     contained /\*/ skipwhite skipempty nextgroup=tsModuleKeyword,tsModuleAs,tsFrom
 syntax keyword tsModuleAs           contained as skipwhite skipempty nextgroup=tsModuleKeyword,tsExportDefaultGroup
 syntax keyword tsFrom               contained from skipwhite skipempty nextgroup=tsString
-syntax match   tsModuleComma        contained /,/ skipwhite skipempty nextgroup=tsModuleKeyword,tsModuleAsterisk,tsModuleGroup,tsFlowTypeKeyword
+syntax match   tsModuleComma        contained /,/ skipwhite skipempty nextgroup=tsModuleKeyword,tsModuleAsterisk,tsModuleGroup,tsTSCTypeKeyword
 
 " Strings, Templates, Numbers
 syntax region  tsString           start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+  contains=tsSpecial,@Spell extend
@@ -134,13 +134,13 @@ syntax keyword tsHtmlEvents     onblur onclick oncontextmenu ondblclick onfocus 
 
 " Code blocks
 syntax region  tsBracket                      matchgroup=tsBrackets            start=/\[/ end=/\]/ contains=@tsExpression,tsSpreadExpression extend fold
-syntax region  tsParen                        matchgroup=tsParens              start=/(/  end=/)/  contains=@tsExpression extend fold nextgroup=tsFlowDefinition
+syntax region  tsParen                        matchgroup=tsParens              start=/(/  end=/)/  contains=@tsExpression extend fold nextgroup=tsTSCDefinition
 syntax region  tsParenDecorator     contained matchgroup=tsParensDecorator     start=/(/  end=/)/  contains=@tsAll extend fold
 syntax region  tsParenIfElse        contained matchgroup=tsParensIfElse        start=/(/  end=/)/  contains=@tsAll skipwhite skipempty nextgroup=tsCommentIfElse,tsIfElseBlock,tsReturn extend fold
 syntax region  tsParenRepeat        contained matchgroup=tsParensRepeat        start=/(/  end=/)/  contains=@tsAll skipwhite skipempty nextgroup=tsCommentRepeat,tsRepeatBlock,tsReturn extend fold
 syntax region  tsParenSwitch        contained matchgroup=tsParensSwitch        start=/(/  end=/)/  contains=@tsAll skipwhite skipempty nextgroup=tsSwitchBlock extend fold
 syntax region  tsParenCatch         contained matchgroup=tsParensCatch         start=/(/  end=/)/  skipwhite skipempty nextgroup=tsTryCatchBlock extend fold
-syntax region  tsFuncArgs           contained matchgroup=tsFuncParens          start=/(/  end=/)/  contains=tsFuncArgCommas,tsComment,tsFuncArgExpression,tsDestructuringBlock,tsDestructuringArray,tsRestExpression,tsFlowArgumentDef skipwhite skipempty nextgroup=tsCommentFunction,tsFuncBlock,tsFlowReturn extend fold
+syntax region  tsFuncArgs           contained matchgroup=tsFuncParens          start=/(/  end=/)/  contains=tsFuncArgCommas,tsComment,tsFuncArgExpression,tsDestructuringBlock,tsDestructuringArray,tsRestExpression,tsTSCArgumentDef skipwhite skipempty nextgroup=tsCommentFunction,tsFuncBlock,tsTSCReturn extend fold
 syntax region  tsClassBlock         contained matchgroup=tsClassBraces         start=/{/  end=/}/  contains=tsClassFuncName,tsClassMethodType,tsArrowFunction,tsArrowFuncArgs,tsComment,tsGenerator,tsDecorator,tsClassProperty,tsClassPropertyComputed,tsClassStringKey,tsAsyncKeyword,tsClassPrivateProperty,tsNoise extend fold
 syntax region  tsFuncBlock          contained matchgroup=tsFuncBraces          start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
 syntax region  tsIfElseBlock        contained matchgroup=tsIfElseBraces        start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
@@ -148,12 +148,12 @@ syntax region  tsTryCatchBlock      contained matchgroup=tsTryCatchBraces      s
 syntax region  tsFinallyBlock       contained matchgroup=tsFinallyBraces       start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
 syntax region  tsSwitchBlock        contained matchgroup=tsSwitchBraces        start=/{/  end=/}/  contains=@tsAll,tsBlock,tsSwitchCase extend fold
 syntax region  tsRepeatBlock        contained matchgroup=tsRepeatBraces        start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
-syntax region  tsDestructuringBlock contained matchgroup=tsDestructuringBraces start=/{/  end=/}/  contains=tsDestructuringProperty,tsDestructuringAssignment,tsDestructuringNoise,tsDestructuringPropertyComputed,tsSpreadExpression,tsComment nextgroup=tsFlowDefinition extend fold
-syntax region  tsDestructuringArray contained matchgroup=tsDestructuringBraces start=/\[/ end=/\]/ contains=tsDestructuringPropertyValue,tsDestructuringNoise,tsDestructuringProperty,tsSpreadExpression,tsDestructuringBlock,tsDestructuringArray,tsComment nextgroup=tsFlowDefinition extend fold
+syntax region  tsDestructuringBlock contained matchgroup=tsDestructuringBraces start=/{/  end=/}/  contains=tsDestructuringProperty,tsDestructuringAssignment,tsDestructuringNoise,tsDestructuringPropertyComputed,tsSpreadExpression,tsComment nextgroup=tsTSCDefinition extend fold
+syntax region  tsDestructuringArray contained matchgroup=tsDestructuringBraces start=/\[/ end=/\]/ contains=tsDestructuringPropertyValue,tsDestructuringNoise,tsDestructuringProperty,tsSpreadExpression,tsDestructuringBlock,tsDestructuringArray,tsComment nextgroup=tsTSCDefinition extend fold
 syntax region  tsObject             contained matchgroup=tsObjectBraces        start=/{/  end=/}/  contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectShorthandProp,tsObjectSeparator,tsObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsDecorator,tsAsyncKeyword extend fold
 syntax region  tsBlock                        matchgroup=tsBraces              start=/{/  end=/}/  contains=@tsAll,tsSpreadExpression extend fold
 syntax region  tsEnumBlock          contained matchgroup=tsBraces              start=/{/  end=/}/  contains=tsEnumComma,tsEnumKey,tsEnumEquals,tsString,tsNumber,tsOperator,tsComment extend fold
-syntax region  tsModuleGroup        contained matchgroup=tsModuleBraces        start=/{/ end=/}/   contains=tsModuleKeyword,tsModuleComma,tsModuleAs,tsComment,tsFlowTypeKeyword skipwhite skipempty nextgroup=tsFrom fold
+syntax region  tsModuleGroup        contained matchgroup=tsModuleBraces        start=/{/ end=/}/   contains=tsModuleKeyword,tsModuleComma,tsModuleAs,tsComment,tsTSCTypeKeyword skipwhite skipempty nextgroup=tsFrom fold
 syntax region  tsSpreadExpression   contained matchgroup=tsSpreadOperator      start=/\.\.\./ end=/[,}\]]\@=/ contains=@tsExpression
 syntax region  tsRestExpression     contained matchgroup=tsRestOperator        start=/\.\.\./ end=/[,)]\@=/
 syntax region  tsTernaryIf                    matchgroup=tsTernaryIfOperator   start=/?:\@!/  end=/\%(:\|}\@=\)/  contains=@tsExpression extend skipwhite skipempty nextgroup=@tsExpression
@@ -161,8 +161,8 @@ syntax region  tsTernaryIf                    matchgroup=tsTernaryIfOperator   s
 syntax match   tsOperator           /?\.\ze\_D/
 syntax match   tsOperator           /??/ skipwhite skipempty nextgroup=@tsExpression
 
-syntax match   tsGenerator            contained /\*/ skipwhite skipempty nextgroup=tsFuncName,tsFuncArgs,tsFlowFunctionGroup
-syntax match   tsFuncName             contained /\<\K\k*/ skipwhite skipempty nextgroup=tsFuncArgs,tsFlowFunctionGeneric
+syntax match   tsGenerator            contained /\*/ skipwhite skipempty nextgroup=tsFuncName,tsFuncArgs,tsTSCFunctionGroup
+syntax match   tsFuncName             contained /\<\K\k*/ skipwhite skipempty nextgroup=tsFuncArgs,tsTSCFunctionGeneric
 syntax region  tsFuncArgExpression    contained matchgroup=tsFuncArgOperator start=/=/ end=/[,)]\@=/ contains=@tsExpression extend
 syntax match   tsFuncArgCommas        contained ','
 syntax keyword tsArguments            contained arguments
@@ -173,7 +173,7 @@ syntax match   tsArrowFuncArgs  /\<\K\k*\ze\s*=>/ skipwhite contains=tsFuncArgs 
 " Matches a series of arguments surrounded in parens
 syntax match   tsArrowFuncArgs  /([^()]*)\ze\s*=>/ contains=tsFuncArgs skipempty skipwhite nextgroup=tsArrowFunction extend
 
-syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsFlowFunctionGroup,tsFlowFunctionGeneric skipwhite
+syntax match tsFunction /\<function\>/      skipwhite skipempty nextgroup=tsGenerator,tsFuncName,tsFuncArgs,tsTSCFunctionGroup,tsTSCFunctionGeneric skipwhite
 syntax match tsArrowFunction /=>/           skipwhite skipempty nextgroup=tsFuncBlock,tsCommentFunction
 syntax match tsArrowFunction /()\ze\s*=>/   skipwhite skipempty nextgroup=tsArrowFunction
 syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArrowFunction
@@ -182,10 +182,10 @@ syntax match tsArrowFunction /_\ze\s*=>/    skipwhite skipempty nextgroup=tsArro
 syntax keyword tsClassKeyword           contained class
 syntax keyword tsExtendsKeyword         contained extends skipwhite skipempty nextgroup=@tsExpression
 syntax match   tsClassNoise             contained /\./
-syntax match   tsClassFuncName          contained /\<\K\k*\ze\s*[(<]/ skipwhite skipempty nextgroup=tsFuncArgs,tsFlowClassFunctionGroup
+syntax match   tsClassFuncName          contained /\<\K\k*\ze\s*[(<]/ skipwhite skipempty nextgroup=tsFuncArgs,tsTSCClassFunctionGroup
 syntax match   tsClassMethodType        contained /\<\%([gs]et\|static\)\ze\s\+\K\k*/ skipwhite skipempty nextgroup=tsAsyncKeyword,tsClassFuncName,tsClassProperty
-syntax region  tsClassDefinition                  start=/\<class\>/ end=/\(\<extends\>\s\+\)\@<!{\@=/ contains=tsClassKeyword,tsExtendsKeyword,tsClassNoise,@tsExpression,tsFlowClassGroup skipwhite skipempty nextgroup=tsCommentClass,tsClassBlock,tsFlowClassGroup
-syntax match   tsClassProperty          contained /\<\K\k*\ze\s*=/ skipwhite skipempty nextgroup=tsClassValue,tsFlowClassDef
+syntax region  tsClassDefinition                  start=/\<class\>/ end=/\(\<extends\>\s\+\)\@<!{\@=/ contains=tsClassKeyword,tsExtendsKeyword,tsClassNoise,@tsExpression,tsTSCClassGroup skipwhite skipempty nextgroup=tsCommentClass,tsClassBlock,tsTSCClassGroup
+syntax match   tsClassProperty          contained /\<\K\k*\ze\s*=/ skipwhite skipempty nextgroup=tsClassValue,tsTSCClassDef
 syntax match tsClassPrivateProperty     contained /private\|public\|readonly/ skipwhite skipempty nextgroup=tsClassProperty
 syntax region  tsClassValue             contained start=/=/ end=/\_[;}]\@=/ contains=@tsExpression
 syntax region  tsClassPropertyComputed  contained matchgroup=tsBrackets start=/\[/ end=/]/ contains=@tsExpression skipwhite skipempty nextgroup=tsFuncArgs,tsClassValue extend
@@ -209,10 +209,10 @@ syntax region  tsEnvComment     start=/\%^#!/ end=/$/ display
 " Specialized Comments - These are special comment regexes that are used in
 " odd places that maintain the proper nextgroup functionality. It sucks we
 " can't make tsComment a skippable type of group for nextgroup
-syntax region  tsCommentFunction    contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturn extend keepend
-syntax region  tsCommentFunction    contained start=+/\*+ end=+\*/+ contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturn fold extend keepend
-syntax region  tsCommentClass       contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsClassBlock,tsFlowClassGroup extend keepend
-syntax region  tsCommentClass       contained start=+/\*+ end=+\*/+ contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsClassBlock,tsFlowClassGroup fold extend keepend
+syntax region  tsCommentFunction    contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturn extend keepend
+syntax region  tsCommentFunction    contained start=+/\*+ end=+\*/+ contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturn fold extend keepend
+syntax region  tsCommentClass       contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsClassBlock,tsTSCClassGroup extend keepend
+syntax region  tsCommentClass       contained start=+/\*+ end=+\*/+ contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsClassBlock,tsTSCClassGroup fold extend keepend
 syntax region  tsCommentIfElse      contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsIfElseBlock extend keepend
 syntax region  tsCommentIfElse      contained start=+/\*+ end=+\*/+ contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsIfElseBlock fold extend keepend
 syntax region  tsCommentRepeat      contained start=+//+ end=/$/    contains=tsCommentTodo,@Spell skipwhite skipempty nextgroup=tsRepeatBlock extend keepend
@@ -223,75 +223,75 @@ syntax match   tsDecorator                    /^\s*@/ nextgroup=tsDecoratorFunct
 syntax match   tsDecoratorFunction  contained /\h[a-zA-Z0-9_.]*/ nextgroup=tsParenDecorator
 
 " NOTE: Look to re-implement this all properly into the existing settings...
-syntax region  tsFlowDefinition     contained                        start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster containedin=tsParen
-syntax region  tsFlowArgumentDef    contained                        start=/:/    end=/\%(\s*[,)]\|=>\@!\)\@=/ contains=@tsFlowCluster
-syntax region  tsFlowArray          contained matchgroup=tsFlowNoise start=/\[/   end=/\]/        contains=@tsFlowCluster,tsComment fold
-syntax region  tsFlowObject         contained matchgroup=tsFlowNoise start=/{/    end=/}/         contains=@tsFlowCluster,tsComment fold
-syntax region  tsFlowExactObject    contained matchgroup=tsFlowNoise start=/{|/   end=/|}/       contains=@tsFlowCluster,tsComment fold
-syntax region  tsFlowParens         contained matchgroup=tsFlowNoise start=/(/  end=/)/ contains=@tsFlowCluster nextgroup=tsFlowArrow skipwhite keepend extend fold
-syntax match   tsFlowNoise          contained /[:;,<>]/
-syntax keyword tsFlowType           contained boolean number string null void any mixed JSON array Function object array bool class
-syntax keyword tsFlowTypeof         contained typeof skipempty skipwhite nextgroup=tsFlowTypeCustom,tsFlowType
-syntax match   tsFlowTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempty nextgroup=tsFlowGeneric
-syntax region  tsFlowGeneric                  matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster containedin=@tsExpression,tsFlowDeclareBlock
-syntax region  tsFlowFunctionGeneric    contained matchgroup=tsFlowNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsFlowCluster nextgroup=tsFuncArgs
-" syntax region  tsFlowFunctionGeneric contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
-" syntax region  tsFlowObjectGeneric  contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster nextgroup=tsFuncArgs
-syntax match   tsFlowArrow          contained /=>/ skipwhite skipempty nextgroup=tsFlowType,tsFlowTypeCustom,tsFlowParens extend
-syntax match   tsFlowObjectKey      contained /[0-9a-zA-Z_$?]*\(\s*:\)\@=/ contains=tsFunctionKey,tsFlowMaybe skipwhite skipempty nextgroup=tsObjectValue containedin=tsObject
-syntax match   tsFlowOrOperator     contained /|/ skipwhite skipempty nextgroup=@tsFlowCluster
-syntax keyword tsFlowImportType     contained type typeof skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup
-syntax match   tsFlowWildcard       contained /*/
-syntax region  tsFlowString         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFlowOrOperator
+syntax region  tsTSCDefinition     contained                        start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsTSCCluster containedin=tsParen
+syntax region  tsTSCArgumentDef    contained                        start=/:/    end=/\%(\s*[,)]\|=>\@!\)\@=/ contains=@tsTSCCluster
+syntax region  tsTSCArray          contained matchgroup=tsTSCNoise start=/\[/   end=/\]/        contains=@tsTSCCluster,tsComment fold
+syntax region  tsTSCObject         contained matchgroup=tsTSCNoise start=/{/    end=/}/         contains=@tsTSCCluster,tsComment fold
+syntax region  tsTSCExactObject    contained matchgroup=tsTSCNoise start=/{|/   end=/|}/       contains=@tsTSCCluster,tsComment fold
+syntax region  tsTSCParens         contained matchgroup=tsTSCNoise start=/(/  end=/)/ contains=@tsTSCCluster nextgroup=tsTSCArrow skipwhite keepend extend fold
+syntax match   tsTSCNoise          contained /[:;,<>]/
+syntax keyword tsTSCType           contained boolean number string null void any mixed JSON array Function object array bool class
+syntax keyword tsTSCTypeof         contained typeof skipempty skipwhite nextgroup=tsTSCTypeCustom,tsTSCType
+syntax match   tsTSCTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempty nextgroup=tsTSCGeneric
+syntax region  tsTSCGeneric                  matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster containedin=@tsExpression,tsTSCDeclareBlock
+syntax region  tsTSCFunctionGeneric    contained matchgroup=tsTSCNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsTSCCluster nextgroup=tsFuncArgs
+" syntax region  tsTSCFunctionGeneric contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
+" syntax region  tsTSCObjectGeneric  contained matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster nextgroup=tsFuncArgs
+syntax match   tsTSCArrow          contained /=>/ skipwhite skipempty nextgroup=tsTSCType,tsTSCTypeCustom,tsTSCParens extend
+syntax match   tsTSCObjectKey      contained /[0-9a-zA-Z_$?]*\(\s*:\)\@=/ contains=tsFunctionKey,tsTSCMaybe skipwhite skipempty nextgroup=tsObjectValue containedin=tsObject
+syntax match   tsTSCOrOperator     contained /|/ skipwhite skipempty nextgroup=@tsTSCCluster
+syntax keyword tsTSCImportType     contained type typeof skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup
+syntax match   tsTSCWildcard       contained /*/
+syntax region  tsTSCString         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsTSCOrOperator
 
-syntax match   tsFlowReturn         contained /:\s*/ contains=tsFlowNoise skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowArrow,tsFlowReturnParens
-syntax region  tsFlowReturnObject   contained matchgroup=tsFlowNoise start=/{/    end=/}/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp extend fold
-syntax region  tsFlowReturnArray    contained matchgroup=tsFlowNoise start=/\[/   end=/\]/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray fold
-syntax region  tsFlowReturnParens   contained matchgroup=tsFlowNoise start=/(/    end=/)/  contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArrow fold
-syntax match   tsFlowReturnArrow    contained /=>/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
-syntax match   tsFlowReturnKeyword  contained /\k\+/ contains=tsFlowType,tsFlowTypeCustom skipwhite skipempty nextgroup=tsFlowReturnGroup,tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
-syntax match   tsFlowReturnMaybe    contained /?/ skipwhite skipempty nextgroup=@tsFlowReturnCluster,tsFlowReturnKeyword,tsFlowReturnObject,tsFlowReturnParens
-syntax region  tsFlowReturnGroup    contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp,tsFlowReturnArray
-syntax match   tsFlowReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextgroup=@tsFlowReturnCluster
-syntax match   tsFlowWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
-syntax keyword tsFlowTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsFlowReturnCluster
-syntax region  tsFlowReturnString   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFuncBlock,tsFlowReturnOrOp
+syntax match   tsTSCReturn         contained /:\s*/ contains=tsTSCNoise skipwhite skipempty nextgroup=@tsTSCReturnCluster,tsTSCArrow,tsTSCReturnParens
+syntax region  tsTSCReturnObject   contained matchgroup=tsTSCNoise start=/{/    end=/}/  contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp extend fold
+syntax region  tsTSCReturnArray    contained matchgroup=tsTSCNoise start=/\[/   end=/\]/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp,tsTSCReturnArray fold
+syntax region  tsTSCReturnParens   contained matchgroup=tsTSCNoise start=/(/    end=/)/  contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp,tsTSCReturnArrow fold
+syntax match   tsTSCReturnArrow    contained /=>/ skipwhite skipempty nextgroup=@tsTSCReturnCluster
+syntax match   tsTSCReturnKeyword  contained /\k\+/ contains=tsTSCType,tsTSCTypeCustom skipwhite skipempty nextgroup=tsTSCReturnGroup,tsFuncBlock,tsTSCReturnOrOp,tsTSCReturnArray
+syntax match   tsTSCReturnMaybe    contained /?/ skipwhite skipempty nextgroup=@tsTSCReturnCluster,tsTSCReturnKeyword,tsTSCReturnObject,tsTSCReturnParens
+syntax region  tsTSCReturnGroup    contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp,tsTSCReturnArray
+syntax match   tsTSCReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextgroup=@tsTSCReturnCluster
+syntax match   tsTSCWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
+syntax keyword tsTSCTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsTSCReturnCluster
+syntax region  tsTSCReturnString   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp
 
-syntax region  tsFlowClassGroup         contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassBlock
-syntax region  tsFlowClassFunctionGroup contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
-syntax match   tsFlowObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsFlowObjectGeneric containedin=tsObject
+syntax region  tsTSCClassGroup         contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsClassBlock
+syntax region  tsTSCClassFunctionGroup contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
+syntax match   tsTSCObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsTSCObjectGeneric containedin=tsObject
 
-syntax region  tsFlowTypeStatement             start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsFlowTypeOperator,tsFlowTypeName,tsFlowTypeDef oneline skipwhite skipempty nextgroup=tsFlowTypeValue keepend
-syntax match   tsFlowTypeName       contained  /\k\+/
-syntax keyword tsFlowTypeDef        contained  type
-syntax region  tsFlowTypeValue      contained     matchgroup=tsFlowNoise start=/=/ end=/\%(;\|\n\%(\s*|\)\@!\)/ contains=@tsFlowCluster,tsFlowGeneric,tsFlowMaybe
-syntax match   tsFlowTypeOperator   contained /=/ containedin=tsFlowTypeValue
-syntax match   tsFlowTypeOperator   contained /=/
-syntax keyword tsFlowTypeKeyword    contained type
+syntax region  tsTSCTypeStatement             start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsTSCTypeOperator,tsTSCTypeName,tsTSCTypeDef oneline skipwhite skipempty nextgroup=tsTSCTypeValue keepend
+syntax match   tsTSCTypeName       contained  /\k\+/
+syntax keyword tsTSCTypeDef        contained  type
+syntax region  tsTSCTypeValue      contained     matchgroup=tsTSCNoise start=/=/ end=/\%(;\|\n\%(\s*|\)\@!\)/ contains=@tsTSCCluster,tsTSCGeneric,tsTSCMaybe
+syntax match   tsTSCTypeOperator   contained /=/ containedin=tsTSCTypeValue
+syntax match   tsTSCTypeOperator   contained /=/
+syntax keyword tsTSCTypeKeyword    contained type
 
-syntax keyword tsFlowDeclare                  declare skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsFlowExport
-syntax keyword tsFlowInterface                interface skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceComma  contained /[,]/ skipwhite skipempty skipnl nextgroup=tsFlowInterfaceName
-syntax keyword tsFlowInterfaceExtends         extends skipwhite skipempty nextgroup=tsFlowInterfaceName
-syntax match   tsFlowInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=tsFlowInterfaceComma,@tsFlowCluster,tsFlowInterfaceExtends,tsFlowGenericInterface
-syntax region  tsFlowGenericInterface contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFlowObject,tsFlowInterfaceComma
-syntax keyword tsFlowExport                   export skipwhite skipempty nextgroup=tsFlowTypeStatement,tsClassDefinition,tsStorageClass,tsFlowModule,tsFlowInterface,tsExportDefault
-syntax match   tsFlowClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsFlowClassDef containedin=tsClassBlock
-syntax region  tsFlowClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsClassValue
+syntax keyword tsTSCDeclare                  declare skipwhite skipempty nextgroup=tsTSCTypeStatement,tsClassDefinition,tsStorageClass,tsTSCModule,tsTSCInterface,tsTSCExport
+syntax keyword tsTSCInterface                interface skipwhite skipempty nextgroup=tsTSCInterfaceName
+syntax match   tsTSCInterfaceComma  contained /[,]/ skipwhite skipempty skipnl nextgroup=tsTSCInterfaceName
+syntax keyword tsTSCInterfaceExtends         extends skipwhite skipempty nextgroup=tsTSCInterfaceName
+syntax match   tsTSCInterfaceName  contained /\<[0-9a-zA-Z_$]*\>/ skipwhite skipempty nextgroup=tsTSCInterfaceComma,@tsTSCCluster,tsTSCInterfaceExtends,tsTSCGenericInterface
+syntax region  tsTSCGenericInterface contained matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster skipwhite skipempty nextgroup=tsTSCObject,tsTSCInterfaceComma
+syntax keyword tsTSCExport                   export skipwhite skipempty nextgroup=tsTSCTypeStatement,tsClassDefinition,tsStorageClass,tsTSCModule,tsTSCInterface,tsExportDefault
+syntax match   tsTSCClassProperty  contained /\<[0-9a-zA-Z_$]*\>:\@=/ skipwhite skipempty nextgroup=tsTSCClassDef containedin=tsClassBlock
+syntax region  tsTSCClassDef       contained start=/:/    end=/\%(\s*[,=;)\n]\)\@=/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsClassValue
 
-syntax region  tsFlowModule         contained start=/module/ end=/\%({\|:\)\@=/ skipempty skipwhite nextgroup=tsFlowDeclareBlock contains=tsString
-syntax region  tsFlowInterface      contained start=/interface/ end=/{\@=/ skipempty skipwhite nextgroup=tsFlowInterfaceBlock contains=@tsFlowCluster
-syntax region  tsFlowDeclareBlock   contained matchgroup=tsFlowNoise start=/{/ end=/}/ contains=tsFlowDeclare,tsFlowNoise,tsComment fold
+syntax region  tsTSCModule         contained start=/module/ end=/\%({\|:\)\@=/ skipempty skipwhite nextgroup=tsTSCDeclareBlock contains=tsString
+syntax region  tsTSCInterface      contained start=/interface/ end=/{\@=/ skipempty skipwhite nextgroup=tsTSCInterfaceBlock contains=@tsTSCCluster
+syntax region  tsTSCDeclareBlock   contained matchgroup=tsTSCNoise start=/{/ end=/}/ contains=tsTSCDeclare,tsTSCNoise,tsComment fold
 
-syntax match   tsFlowMaybe          contained /?/
-syntax region  tsFlowInterfaceBlock contained matchgroup=tsFlowNoise start=/{/ end=/}/ contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectSeparator,tsObjectFuncName,tsFlowObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsFlowNoise,tsFlowParens,tsFlowGeneric keepend fold
+syntax match   tsTSCMaybe          contained /?/
+syntax region  tsTSCInterfaceBlock contained matchgroup=tsTSCNoise start=/{/ end=/}/ contains=tsObjectKey,tsObjectKeyString,tsObjectKeyComputed,tsObjectSeparator,tsObjectFuncName,tsTSCObjectFuncName,tsObjectMethodType,tsGenerator,tsComment,tsObjectStringKey,tsSpreadExpression,tsTSCNoise,tsTSCParens,tsTSCGeneric keepend fold
 
-syntax region  tsFlowParenAnnotation contained start=/:/ end=/[,=)]\@=/ containedin=tsParen contains=@tsFlowCluster
+syntax region  tsTSCParenAnnotation contained start=/:/ end=/[,=)]\@=/ containedin=tsParen contains=@tsTSCCluster
 
-syntax cluster tsFlowReturnCluster            contains=tsFlowNoise,tsFlowReturnObject,tsFlowReturnArray,tsFlowReturnKeyword,tsFlowReturnGroup,tsFlowReturnMaybe,tsFlowReturnOrOp,tsFlowWildcardReturn,tsFlowReturnArrow,tsFlowTypeofReturn,tsFlowGeneric,tsFlowReturnString
-syntax cluster tsFlowCluster                  contains=tsFlowArray,tsFlowObject,tsFlowExactObject,tsFlowNoise,tsFlowTypeof,tsFlowType,tsFlowGeneric,tsFlowMaybe,tsFlowParens,tsFlowOrOperator,tsFlowWildcard,tsFlowString
+syntax cluster tsTSCReturnCluster            contains=tsTSCNoise,tsTSCReturnObject,tsTSCReturnArray,tsTSCReturnKeyword,tsTSCReturnGroup,tsTSCReturnMaybe,tsTSCReturnOrOp,tsTSCWildcardReturn,tsTSCReturnArrow,tsTSCTypeofReturn,tsTSCGeneric,tsTSCReturnString
+syntax cluster tsTSCCluster                  contains=tsTSCArray,tsTSCObject,tsTSCExactObject,tsTSCNoise,tsTSCTypeof,tsTSCType,tsTSCGeneric,tsTSCMaybe,tsTSCParens,tsTSCOrOperator,tsTSCWildcard,tsTSCString
 
-syntax keyword tsTypeAs as nextgroup=tsFlowReturn skipwhite skipempty
+syntax keyword tsTypeAs as nextgroup=tsTSCReturn skipwhite skipempty
 
 syntax cluster tsExpression  contains=tsStyledDefinition,tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
 syntax cluster tsAll         contains=@tsExpression,tsStorageClass,tsConditional,tsRepeat,tsReturn,tsException,tsTry,tsNoise,tsBlockLabel
@@ -429,63 +429,63 @@ hi def link tsHtmlElemFuncs        PreProc
 
 hi def link tsCssStyles            Label
 
-hi def link tsFlowDefinition         PreProc
-hi def link tsFlowClassDef           tsFlowDefinition
-hi def link tsFlowArgumentDef        tsFlowDefinition
-hi def link tsFlowType               Type
-hi def link tsFlowTypeCustom         PreProc
-hi def link tsFlowTypeof             PreProc
-hi def link tsFlowTypeofReturn       PreProc
-hi def link tsFlowArray              PreProc
-hi def link tsFlowObject             PreProc
-hi def link tsFlowExactObject        PreProc
-hi def link tsFlowParens             PreProc
-hi def link tsFlowGeneric            PreProc
-hi def link tsFlowString             PreProc
-hi def link tsFlowReturnString       PreProc
-hi def link tsFlowFunctionGeneric    tsFlowGeneric
-hi def link tsFlowObjectGeneric      tsFlowGeneric
-hi def link tsFlowReturn             PreProc
-hi def link tsFlowParenAnnotation    PreProc
-hi def link tsFlowReturnObject       tsFlowReturn
-hi def link tsFlowReturnArray        tsFlowArray
-hi def link tsFlowReturnParens       tsFlowParens
-hi def link tsFlowReturnGroup        tsFlowGeneric
-hi def link tsFlowClassGroup         PreProc
-hi def link tsFlowClassFunctionGroup PreProc
-hi def link tsFlowArrow              Noise
-hi def link tsFlowReturnArrow        PreProc
-hi def link tsFlowTypeStatement      PreProc
-hi def link tsFlowTypeKeyword        PreProc
-hi def link tsFlowTypeOperator       Operator
-hi def link tsFlowMaybe              PreProc
-hi def link tsFlowReturnMaybe        PreProc
-hi def link tsFlowClassProperty      tsClassProperty
-hi def link tsFlowDeclare            PreProc
-hi def link tsFlowExport             PreProc
-hi def link tsFlowModule             PreProc
-hi def link tsFlowInterface          PreProc
-hi def link tsFlowNoise              Noise
-hi def link tsFlowObjectKey          tsObjectKey
-hi def link tsFlowOrOperator         tsOperator
-hi def link tsFlowReturnOrOp         tsFlowOrOperator
-hi def link tsFlowWildcard           PreProc
-hi def link tsFlowWildcardReturn     PreProc
-hi def link tsFlowImportType         PreProc
-hi def link tsFlowTypeValue          PreProc
-hi def link tsFlowReturnKeyword      PreProc
-hi def link tsFlowObjectFuncName     tsObjectFuncName
+hi def link tsTSCDefinition         PreProc
+hi def link tsTSCClassDef           tsTSCDefinition
+hi def link tsTSCArgumentDef        tsTSCDefinition
+hi def link tsTSCType               Type
+hi def link tsTSCTypeCustom         PreProc
+hi def link tsTSCTypeof             PreProc
+hi def link tsTSCTypeofReturn       PreProc
+hi def link tsTSCArray              PreProc
+hi def link tsTSCObject             PreProc
+hi def link tsTSCExactObject        PreProc
+hi def link tsTSCParens             PreProc
+hi def link tsTSCGeneric            PreProc
+hi def link tsTSCString             PreProc
+hi def link tsTSCReturnString       PreProc
+hi def link tsTSCFunctionGeneric    tsTSCGeneric
+hi def link tsTSCObjectGeneric      tsTSCGeneric
+hi def link tsTSCReturn             PreProc
+hi def link tsTSCParenAnnotation    PreProc
+hi def link tsTSCReturnObject       tsTSCReturn
+hi def link tsTSCReturnArray        tsTSCArray
+hi def link tsTSCReturnParens       tsTSCParens
+hi def link tsTSCReturnGroup        tsTSCGeneric
+hi def link tsTSCClassGroup         PreProc
+hi def link tsTSCClassFunctionGroup PreProc
+hi def link tsTSCArrow              Noise
+hi def link tsTSCReturnArrow        PreProc
+hi def link tsTSCTypeStatement      PreProc
+hi def link tsTSCTypeKeyword        PreProc
+hi def link tsTSCTypeOperator       Operator
+hi def link tsTSCMaybe              PreProc
+hi def link tsTSCReturnMaybe        PreProc
+hi def link tsTSCClassProperty      tsClassProperty
+hi def link tsTSCDeclare            PreProc
+hi def link tsTSCExport             PreProc
+hi def link tsTSCModule             PreProc
+hi def link tsTSCInterface          PreProc
+hi def link tsTSCNoise              Noise
+hi def link tsTSCObjectKey          tsObjectKey
+hi def link tsTSCOrOperator         tsOperator
+hi def link tsTSCReturnOrOp         tsTSCOrOperator
+hi def link tsTSCWildcard           PreProc
+hi def link tsTSCWildcardReturn     PreProc
+hi def link tsTSCImportType         PreProc
+hi def link tsTSCTypeValue          PreProc
+hi def link tsTSCReturnKeyword      PreProc
+hi def link tsTSCObjectFuncName     tsObjectFuncName
 hi def link tsTypeAs                 PreProc
-hi def link tsFlowInterfaceName      tsFlowType
-hi def link tsFlowTypeName           tsFlowType
-hi def link tsFlowTypeDef            PreProc
+hi def link tsTSCInterfaceName      tsTSCType
+hi def link tsTSCTypeName           tsTSCType
+hi def link tsTSCTypeDef            PreProc
 hi def link tsEnum                   StorageClass
-hi def link tsEnumKey                tsFlowObjectKey
+hi def link tsEnumKey                tsTSCObjectKey
 hi def link tsEnumEquals             tsOperator
 hi def link tsEnumComma              Noise
-hi def link tsFlowInterfaceExtends   PreProc
-hi def link tsFlowGenericInterface   PreProc
-hi def link tsFlowInterfaceComma     Noise
+hi def link tsTSCInterfaceExtends   PreProc
+hi def link tsTSCGenericInterface   PreProc
+hi def link tsTSCInterfaceComma     Noise
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
