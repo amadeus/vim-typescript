@@ -237,7 +237,7 @@ syntax region  tsFlowGeneric                  matchgroup=tsFlowNoise start=/\k\@
 syntax region  tsFlowFunctionGeneric    contained matchgroup=tsFlowNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsFlowCluster nextgroup=tsFuncArgs
 " syntax region  tsFlowFunctionGeneric contained matchgroup=tsFlowNoise start=/</ end=/>/ contains=@tsFlowCluster skipwhite skipempty nextgroup=tsFuncArgs
 " syntax region  tsFlowObjectGeneric  contained matchgroup=tsFlowNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsFlowCluster nextgroup=tsFuncArgs
-syntax match   tsFlowArrow          contained /=>/ skipwhite skipempty nextgroup=tsFlowType,tsFlowTypeCustom,tsFlowParens
+syntax match   tsFlowArrow          contained /=>/ skipwhite skipempty nextgroup=tsFlowType,tsFlowTypeCustom,tsFlowParens extend
 syntax match   tsFlowObjectKey      contained /[0-9a-zA-Z_$?]*\(\s*:\)\@=/ contains=tsFunctionKey,tsFlowMaybe skipwhite skipempty nextgroup=tsObjectValue containedin=tsObject
 syntax match   tsFlowOrOperator     contained /|/ skipwhite skipempty nextgroup=@tsFlowCluster
 syntax keyword tsFlowImportType     contained type typeof skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup
@@ -453,7 +453,7 @@ hi def link tsFlowReturnParens       tsFlowParens
 hi def link tsFlowReturnGroup        tsFlowGeneric
 hi def link tsFlowClassGroup         PreProc
 hi def link tsFlowClassFunctionGroup PreProc
-hi def link tsFlowArrow              PreProc
+hi def link tsFlowArrow              Noise
 hi def link tsFlowReturnArrow        PreProc
 hi def link tsFlowTypeStatement      PreProc
 hi def link tsFlowTypeKeyword        PreProc
