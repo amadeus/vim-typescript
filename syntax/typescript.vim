@@ -142,7 +142,7 @@ syntax region  tsParenSwitch        contained matchgroup=tsParensSwitch        s
 syntax region  tsParenCatch         contained matchgroup=tsParensCatch         start=/(/  end=/)/  skipwhite skipempty nextgroup=tsTryCatchBlock extend fold
 syntax region  tsFuncArgs           contained matchgroup=tsFuncParens          start=/(/  end=/)/  contains=tsFuncArgCommas,tsComment,tsFuncArgExpression,tsDestructuringBlock,tsDestructuringArray,tsRestExpression,tsTSCArgumentDef skipwhite skipempty nextgroup=tsCommentFunction,tsFuncBlock,tsTSCReturn extend fold
 syntax region  tsClassBlock         contained matchgroup=tsClassBraces         start=/{/  end=/}/  contains=tsClassFuncName,tsClassMethodType,tsArrowFunction,tsArrowFuncArgs,tsComment,tsGenerator,tsDecorator,tsClassProperty,tsClassPropertyComputed,tsClassStringKey,tsAsyncKeyword,tsClassPrivateProperty,tsNoise extend fold
-syntax region  tsFuncBlock          contained matchgroup=tsFuncBraces          start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
+syntax region  tsFuncBlock          contained matchgroup=tsFuncBraces          start=/{/  end=/}/  contains=@tsAll,tsBlock,tsTSCGenericArrow extend fold
 syntax region  tsIfElseBlock        contained matchgroup=tsIfElseBraces        start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
 syntax region  tsTryCatchBlock      contained matchgroup=tsTryCatchBraces      start=/{/  end=/}/  contains=@tsAll,tsBlock skipwhite skipempty nextgroup=tsCatch,tsFinally extend fold
 syntax region  tsFinallyBlock       contained matchgroup=tsFinallyBraces       start=/{/  end=/}/  contains=@tsAll,tsBlock extend fold
@@ -233,7 +233,9 @@ syntax match   tsTSCNoise          contained /[:;,<>]/
 syntax keyword tsTSCType           contained boolean number string null void any mixed JSON array Function object array bool class
 syntax keyword tsTSCTypeof         contained typeof skipempty skipwhite nextgroup=tsTSCTypeCustom,tsTSCType
 syntax match   tsTSCTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempty nextgroup=tsTSCGeneric
-syntax region  tsTSCGeneric                  matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster containedin=@tsExpression,tsTSCDeclareBlock
+syntax region  tsTSCGeneric                  matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster,tsTSCGenericBase containedin=@tsExpression,tsTSCDeclareBlock
+syntax region  tsTSCGenericArrow             matchgroup=tsTSCNoise start=/</ end=/>\ze(/ keepend extend oneline contains=@tsTSCCluster,tsTSCGenericBase containedin=@tsExpression,tsTSCDeclareBlock nextgroup=tsArrowFunction
+syntax region  tsTSCGenericBase    contained matchgroup=tsTSCNoise start=/</ end=/>/ keepend extend oneline contains=@tsTSCCluster
 syntax region  tsTSCFunctionGeneric    contained matchgroup=tsTSCNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsTSCCluster nextgroup=tsFuncArgs
 " syntax region  tsTSCFunctionGeneric contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
 " syntax region  tsTSCObjectGeneric  contained matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster nextgroup=tsFuncArgs
@@ -441,6 +443,7 @@ hi def link tsTSCObject             PreProc
 hi def link tsTSCExactObject        PreProc
 hi def link tsTSCParens             PreProc
 hi def link tsTSCGeneric            PreProc
+hi def link tsTSCGenericArrow       PreProc
 hi def link tsTSCString             PreProc
 hi def link tsTSCReturnString       PreProc
 hi def link tsTSCFunctionGeneric    tsTSCGeneric
