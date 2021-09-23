@@ -236,7 +236,7 @@ syntax match   tsTSCTypeCustom     contained /[0-9a-zA-Z_.]*/ skipwhite skipempt
 syntax region  tsTSCGeneric                  matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster,tsTSCGenericBase containedin=@tsExpression,tsTSCDeclareBlock
 syntax region  tsTSCGenericArrow             matchgroup=tsTSCNoise start=/</ end=/>\ze(/ keepend extend oneline contains=@tsTSCCluster,tsTSCGenericBase containedin=@tsExpression,tsTSCDeclareBlock nextgroup=tsArrowFunction
 syntax region  tsTSCGenericBase    contained matchgroup=tsTSCNoise start=/</ end=/>/ keepend extend oneline contains=@tsTSCCluster
-syntax region  tsTSCFunctionGeneric    contained matchgroup=tsTSCNoise start=/</ end=/>(\@=/ keepend extend oneline contains=@tsTSCCluster nextgroup=tsFuncArgs
+syntax region  tsTSCFunctionGeneric    contained matchgroup=tsTSCNoise start=/</ end=/>(\@=/ keepend extend contains=@tsTSCCluster nextgroup=tsFuncArgs
 " syntax region  tsTSCFunctionGeneric contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
 " syntax region  tsTSCObjectGeneric  contained matchgroup=tsTSCNoise start=/\k\@<=</ end=/>/ keepend extend contains=@tsTSCCluster nextgroup=tsFuncArgs
 syntax match   tsTSCArrow          contained /=>/ skipwhite skipempty nextgroup=tsTSCType,tsTSCTypeCustom,tsTSCParens extend
