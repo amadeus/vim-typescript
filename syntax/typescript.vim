@@ -245,6 +245,7 @@ syntax match   tsTSCOrOperator     contained /|/ skipwhite skipempty nextgroup=@
 syntax keyword tsTSCImportType     contained type typeof skipwhite skipempty nextgroup=tsModuleAsterisk,tsModuleKeyword,tsModuleGroup
 syntax match   tsTSCWildcard       contained /*/
 syntax region  tsTSCString         contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsTSCOrOperator
+syntax keyword tsTSCReadOnly       contained readonly skipwhite skipempty nextgroup=@tsTSCCluster
 
 syntax match   tsTSCReturn         contained /:\s*/ contains=tsTSCNoise skipwhite skipempty nextgroup=@tsTSCReturnCluster,tsTSCArrow,tsTSCReturnParens
 syntax region  tsTSCReturnObject   contained matchgroup=tsTSCNoise start=/{/    end=/}/  contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp extend fold
@@ -258,6 +259,7 @@ syntax match   tsTSCReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextg
 syntax match   tsTSCWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
 syntax keyword tsTSCTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsTSCReturnCluster
 syntax region  tsTSCReturnString   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp
+syntax keyword tsTSCReadOnlyReturn contained readonly skipwhite skipempty nextgroup=@tsTSCReturnCluster
 
 syntax region  tsTSCClassGroup         contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsClassBlock
 syntax region  tsTSCClassFunctionGroup contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
@@ -290,8 +292,8 @@ syntax region  tsTSCInterfaceBlock contained matchgroup=tsTSCNoise start=/{/ end
 
 syntax region  tsTSCParenAnnotation contained start=/:/ end=/[,=)]\@=/ containedin=tsParen contains=@tsTSCCluster
 
-syntax cluster tsTSCReturnCluster            contains=tsTSCNoise,tsTSCReturnObject,tsTSCReturnArray,tsTSCReturnKeyword,tsTSCReturnGroup,tsTSCReturnMaybe,tsTSCReturnOrOp,tsTSCWildcardReturn,tsTSCReturnArrow,tsTSCTypeofReturn,tsTSCGeneric,tsTSCReturnString
-syntax cluster tsTSCCluster                  contains=tsTSCArray,tsTSCObject,tsTSCExactObject,tsTSCNoise,tsTSCTypeof,tsTSCType,tsTSCGeneric,tsTSCMaybe,tsTSCParens,tsTSCOrOperator,tsTSCWildcard,tsTSCString
+syntax cluster tsTSCReturnCluster            contains=tsTSCNoise,tsTSCReturnObject,tsTSCReturnArray,tsTSCReturnKeyword,tsTSCReturnGroup,tsTSCReturnMaybe,tsTSCReturnOrOp,tsTSCWildcardReturn,tsTSCReturnArrow,tsTSCTypeofReturn,tsTSCGeneric,tsTSCReturnString,tsTSCReadOnlyReturn
+syntax cluster tsTSCCluster                  contains=tsTSCArray,tsTSCObject,tsTSCExactObject,tsTSCNoise,tsTSCTypeof,tsTSCType,tsTSCGeneric,tsTSCMaybe,tsTSCParens,tsTSCOrOperator,tsTSCWildcard,tsTSCString,tsTSCReadOnly
 
 syntax keyword tsTypeAs as nextgroup=tsTSCReturn skipwhite skipempty
 
@@ -468,6 +470,8 @@ hi def link tsTSCDeclare            PreProc
 hi def link tsTSCExport             PreProc
 hi def link tsTSCModule             PreProc
 hi def link tsTSCInterface          PreProc
+hi def link tsTSCReadOnly           PreProc
+hi def link tsTSCReadOnlyReturn     PreProc
 hi def link tsTSCNoise              Noise
 hi def link tsTSCObjectKey          tsObjectKey
 hi def link tsTSCOrOperator         tsOperator
