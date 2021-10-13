@@ -415,21 +415,21 @@ hi def link tsDestructuringProperty   tsFuncArgs
 hi def link tsDestructuringAssignment tsObjectKey
 hi def link tsDestructuringNoise      Noise
 
-hi def link tsCommentFunction      tsComment
-hi def link tsCommentClass         tsComment
-hi def link tsCommentIfElse        tsComment
-hi def link tsCommentRepeat        tsComment
+hi def link tsCommentFunction       tsComment
+hi def link tsCommentClass          tsComment
+hi def link tsCommentIfElse         tsComment
+hi def link tsCommentRepeat         tsComment
 
-hi def link tsDomErrNo             Constant
-hi def link tsDomNodeConsts        Constant
-hi def link tsDomElemAttrs         Label
-hi def link tsDomElemFuncs         PreProc
+hi def link tsDomErrNo              Constant
+hi def link tsDomNodeConsts         Constant
+hi def link tsDomElemAttrs          Label
+hi def link tsDomElemFuncs          PreProc
 
-hi def link tsHtmlEvents           Special
-hi def link tsHtmlElemAttrs        Label
-hi def link tsHtmlElemFuncs        PreProc
+hi def link tsHtmlEvents            Special
+hi def link tsHtmlElemAttrs         Label
+hi def link tsHtmlElemFuncs         PreProc
 
-hi def link tsCssStyles            Label
+hi def link tsCssStyles             Label
 
 hi def link tsTSCDefinition         PreProc
 hi def link tsTSCClassDef           tsTSCDefinition
@@ -478,14 +478,14 @@ hi def link tsTSCImportType         PreProc
 hi def link tsTSCTypeValue          PreProc
 hi def link tsTSCReturnKeyword      PreProc
 hi def link tsTSCObjectFuncName     tsObjectFuncName
-hi def link tsTypeAs                 PreProc
+hi def link tsTypeAs                PreProc
 hi def link tsTSCInterfaceName      tsTSCType
 hi def link tsTSCTypeName           tsTSCType
 hi def link tsTSCTypeDef            PreProc
-hi def link tsEnum                   StorageClass
-hi def link tsEnumKey                tsTSCObjectKey
-hi def link tsEnumEquals             tsOperator
-hi def link tsEnumComma              Noise
+hi def link tsEnum                  StorageClass
+hi def link tsEnumKey               tsTSCObjectKey
+hi def link tsEnumEquals            tsOperator
+hi def link tsEnumComma             Noise
 hi def link tsTSCInterfaceExtends   PreProc
 hi def link tsTSCGenericInterface   PreProc
 hi def link tsTSCInterfaceComma     Noise
