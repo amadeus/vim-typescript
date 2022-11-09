@@ -265,7 +265,7 @@ syntax keyword tsTSCReadOnlyReturn contained readonly skipwhite skipempty nextgr
 
 syntax region  tsTSCClassGroup         contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsClassBlock
 syntax region  tsTSCClassFunctionGroup contained matchgroup=tsTSCNoise start=/</ end=/>/ contains=@tsTSCCluster skipwhite skipempty nextgroup=tsFuncArgs
-syntax match   tsTSCObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsTSCObjectGeneric containedin=tsObject
+syntax match   tsTSCObjectFuncName contained /\<\K\k*<\@=/ skipwhite skipempty nextgroup=tsTSCObjectGeneric,tsTSCFunctionGeneric containedin=tsObject
 
 syntax region  tsTSCTypeStatement             start=/\(opaque\s\+\)\?type\%(\s\+\k\)\@=/    end=/=\@=/ contains=tsTSCTypeOperator,tsTSCTypeName,tsTSCTypeDef oneline skipwhite skipempty nextgroup=tsTSCTypeValue keepend
 syntax match   tsTSCTypeName       contained  /\k\+/
