@@ -55,7 +55,7 @@ syntax match   tsFloat            /\c\<\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%(e[+-]\=
 " Regular Expressions
 syntax match   tsSpecial            contained "\v\\%(x\x\x|u%(\x{4}|\{\x{4,5}})|c\u|.)"
 syntax region  tsTemplateExpression contained matchgroup=tsTemplateBraces start=+${+ end=+}+ contains=@tsExpression keepend
-syntax region  tsRegexpCharClass    contained start=+\[+ skip=+\\.+ end=+\]+ contains=tsSpecial extend
+syntax region  tsRegexpCharClass    contained matchgroup=tsTemplateBraces start=+\[+ skip=+\\.+ end=+\]+ contains=tsSpecial extend
 syntax match   tsRegexpBoundary     contained "\v\c[$^]|\\b"
 syntax match   tsRegexpBackRef      contained "\v\\[1-9]\d*"
 syntax match   tsRegexpQuantifier   contained "\v[^\\]%([?*+]|\{\d+%(,\d*)?})\??"lc=1
