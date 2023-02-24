@@ -260,6 +260,7 @@ syntax match   tsTSCReturnOrOp     contained /\s*|\s*/ skipwhite skipempty nextg
 syntax match   tsTSCReturnAndOp    contained /\s*&\s*/ skipwhite skipempty nextgroup=@tsTSCReturnCluster
 syntax match   tsTSCWildcardReturn contained /*/ skipwhite skipempty nextgroup=tsFuncBlock
 syntax keyword tsTSCTypeofReturn   contained typeof skipempty skipwhite nextgroup=@tsTSCReturnCluster
+syntax keyword tsTSCKeyofReturn    contained keyof skipempty skipwhite nextgroup=@tsTSCReturnCluster
 syntax region  tsTSCReturnString   contained start=+\z(["']\)+  skip=+\\\%(\z1\|$\)+  end=+\z1+ end=+$+ extend skipwhite skipempty nextgroup=tsFuncBlock,tsTSCReturnOrOp,tsTSCReturnAndOp
 syntax keyword tsTSCReadOnlyReturn contained readonly skipwhite skipempty nextgroup=@tsTSCReturnCluster
 
@@ -294,7 +295,7 @@ syntax region  tsTSCInterfaceBlock contained matchgroup=tsTSCNoise start=/{/ end
 
 syntax region  tsTSCParenAnnotation contained start=/:/ end=/[,=)]\@=/ containedin=tsParen contains=@tsTSCCluster
 
-syntax cluster tsTSCReturnCluster            contains=tsTSCNoise,tsTSCReturnObject,tsTSCReturnArray,tsTSCReturnKeyword,tsTSCReturnGroup,tsTSCReturnMaybe,tsTSCReturnOrOp,tsTSCReturnAndOp,tsTSCWildcardReturn,tsTSCReturnArrow,tsTSCTypeofReturn,tsTSCGeneric,tsTSCReturnString,tsTSCReadOnlyReturn
+syntax cluster tsTSCReturnCluster            contains=tsTSCNoise,tsTSCReturnObject,tsTSCReturnArray,tsTSCReturnKeyword,tsTSCReturnGroup,tsTSCReturnMaybe,tsTSCReturnOrOp,tsTSCReturnAndOp,tsTSCWildcardReturn,tsTSCReturnArrow,tsTSCTypeofReturn,tsTSCKeyofReturn,tsTSCGeneric,tsTSCReturnString,tsTSCReadOnlyReturn
 syntax cluster tsTSCCluster                  contains=tsTSCArray,tsTSCObject,tsTSCExactObject,tsTSCNoise,tsTSCTypeof,tsTSCType,tsTSCGeneric,tsTSCMaybe,tsTSCParens,tsTSCOrOperator,tsTSCAndOperator,tsTSCWildcard,tsTSCString,tsTSCReadOnly
 
 syntax keyword tsTypeAs as nextgroup=tsTSCReturn skipwhite skipempty
@@ -442,6 +443,7 @@ hi def link tsTSCType               Type
 hi def link tsTSCTypeCustom         PreProc
 hi def link tsTSCTypeof             PreProc
 hi def link tsTSCTypeofReturn       PreProc
+hi def link tsTSCKeyofReturn        PreProc
 hi def link tsTSCArray              PreProc
 hi def link tsTSCObject             PreProc
 hi def link tsTSCExactObject        PreProc
