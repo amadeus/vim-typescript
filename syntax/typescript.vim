@@ -51,6 +51,8 @@ syntax match   tsTaggedTemplate   /\<\K\k*\ze`/ nextgroup=tsTemplateString
 syntax match   tsNumber           /\c\<\%(\d\+\%(e[+-]\=\d\+\)\=\|0b[01]\+\|0o\o\+\|0x\%(\x\|_\)\+\)\>/
 syntax keyword tsNumber           Infinity
 syntax match   tsFloat            /\c\<\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%(e[+-]\=\d\+\)\=\>/
+syntax match   tsNumber           /\c\<\d\+\(_\d\+\)*\>/
+syntax match   tsBigInt           /\c\<\d\+\(_\d\+\)*n\>/
 
 " Regular Expressions
 syntax match   tsSpecial            contained "\v\\%(x\x\x|u%(\x{4}|\{\x{4,5}})|c\u|.)"
@@ -363,6 +365,7 @@ hi def link tsNan                  Number
 hi def link tsNull                 Type
 hi def link tsUndefined            Type
 hi def link tsNumber               Number
+hi def link tsBigInt               tsNumber
 hi def link tsFloat                Float
 hi def link tsBooleanTrue          Boolean
 hi def link tsBooleanFalse         Boolean
