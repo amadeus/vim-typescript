@@ -303,7 +303,7 @@ syntax cluster tsTSCCluster                  contains=tsTSCArray,tsTSCObject,tsT
 
 syntax keyword tsTypeAs as nextgroup=tsTSCReturn skipwhite skipempty
 
-syntax cluster tsExpression  contains=tsStyledDefinition,tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
+syntax cluster tsExpression  contains=tsStyledDefinition,tsBracket,tsParen,tsObject,tsTernaryIf,tsTaggedTemplate,tsTemplateString,tsString,tsRegexpString,tsNumber,tsBigInt,tsFloat,tsOperator,tsOperatorKeyword,tsBooleanTrue,tsBooleanFalse,tsNull,tsFunction,tsArrowFunction,tsGlobalObjects,tsExceptions,tsFutureKeys,tsDomErrNo,tsDomNodeConsts,tsHtmlEvents,tsFuncCall,tsUndefined,tsNan,tsPrototype,tsBuiltins,tsNoise,tsClassDefinition,tsArrowFunction,tsArrowFuncArgs,tsParensError,tsComment,tsArguments,tsThis,tsSuper,tsDo,tsForAwait,tsAsyncKeyword,tsStatement,tsDot
 syntax cluster tsAll         contains=@tsExpression,tsStorageClass,tsConditional,tsRepeat,tsReturn,tsException,tsTry,tsNoise,tsBlockLabel
 
 hi def link tsComment              Comment
