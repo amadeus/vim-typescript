@@ -52,7 +52,8 @@ syntax match   tsNumber           /\c\<\%(\d\+\%(e[+-]\=\d\+\)\=\|0b[01]\+\|0o\o
 syntax keyword tsNumber           Infinity
 syntax match   tsFloat            /\c\<\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%(e[+-]\=\d\+\)\=\>/
 syntax match   tsNumber           /\c\<\d\+\(_\d\+\)*\>/
-syntax match   tsBigInt           /\c\<\d\+\(_\d\+\)*n\>/
+syntax match   tsBigInt           /\<\d\+\(_\d\+\)*n\>/ contains=tsBigIntUnit
+syntax match   tsBigIntUnit       contained /n/
 
 " Regular Expressions
 syntax match   tsSpecial            contained "\v\\%(x\x\x|u%(\x{4}|\{\x{4,5}})|c\u|.)"
@@ -502,6 +503,7 @@ hi def link tsEnumComma             Noise
 hi def link tsTSCInterfaceExtends   PreProc
 hi def link tsTSCGenericInterface   PreProc
 hi def link tsTSCInterfaceComma     Noise
+hi def link tsBigIntUnit            Operator
 
 let b:current_syntax = 'typescript'
 if main_syntax == 'typescript'
